@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | A to Z Nutrition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --sage:#4A6741;--sage-l:#7A9E72;--sage-p:#EAF0E7;
+      --cream:#F8F4EE;--gold:#B8975A;--gold-l:#D4B483;
+      --dark:#1E2820;--mid:#4A4A3F;--muted:#8A8A7A;
+      --white:#fff;--radius:12px;
+      --sidebar:240px;
+      --red:#C0392B;--red-l:#FDEDEC;
+      --green:#27AE60;--green-l:#EAFAF1;
+      --blue:#2471A3;--blue-l:#EAF3FB;
+      --yellow:#D4AC0D;--yellow-l:#FEF9E7;
+    }
+    html,body{height:100%;font-family:'Inter',sans-serif;background:var(--cream);color:var(--dark)}
+
+    /* ── Layout ── */
+    #app{display:flex;height:100vh;overflow:hidden}
+
+    /* ── Sidebar ── */
+    #sidebar{
+      width:var(--sidebar);flex-shrink:0;
+      background:var(--dark);
+      display:flex;flex-direction:column;
+      height:100vh;overflow-y:auto;
+      transition:width .2s;
+    }
+    .sb-logo{padding:24px 20px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .sb-logo img{height:38px;width:auto;filter:brightness(0) invert(1)}
+    .sb-section-label{
+      font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+      color:rgba(255,255,255,.3);padding:20px 20px 8px;
+    }
+    .sb-nav{list-style:none;padding:0 10px}
+    .sb-nav li a{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 12px;border-radius:8px;
+      font-size:.82rem;font-weight:500;color:rgba(255,255,255,.65);
+      text-decoration:none;cursor:pointer;transition:all .15s;
+      border:1px solid transparent;
+    }
+    .sb-nav li a:hover{background:rgba(255,255,255,.06);color:var(--white)}
+    .sb-nav li a.active{background:var(--sage);color:var(--white);border-color:rgba(255,255,255,.1)}
+    .sb-nav li a .icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
+    .sb-badge{
+      margin-left:auto;background:var(--gold);color:var(--white);
+      font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:100px;
+    }
+    .sb-footer{margin-top:auto;padding:16px 10px;border-top:1px solid rgba(255,255,255,.08)}
+    .sb-user{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px}
+    .sb-avatar{
+      width:32px;height:32px;border-radius:50%;
+      background:var(--sage);color:var(--white);
+      display:flex;align-items:center;justify-content:center;
+      font-size:.75rem;font-weight:700;flex-shrink:0;
+    }
+    .sb-user-info{flex:1;min-width:0}
+    .sb-user-name{font-size:.78rem;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sb-user-role{font-size:.65rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.08em}
+    .sb-signout{
+      background:none;border:none;color:rgba(255,255,255,.35);
+      font-size:.7rem;cursor:pointer;padding:4px 6px;border-radius:4px;
+      transition:color .15s;white-space:nowrap;
+    }
+    .sb-signout:hover{color:var(--white)}
+
+    /* ── Main ── */
+    #main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+    .top-bar{
+      background:var(--white);border-bottom:1px solid #EEEBE4;
+      padding:16px 32px;display:flex;align-items:center;justify-content:space-between;
+      position:sticky;top:0;z-index:10;
+    }
+    .page-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--dark)}
+    .page-subtitle{font-size:.78rem;color:var(--muted);margin-top:2px}
+    .top-actions{display:flex;gap:10px;align-items:center}
+    .content{padding:28px 32px;flex:1}
+
+    /* ── Buttons ── */
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:100px;
+      font-family:'Inter',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.05em;
+      text-transform:uppercase;border:none;cursor:pointer;transition:all .15s;text-decoration:none}
+    .btn-primary{background:var(--sage);color:var(--white)}
+    .btn-primary:hover{background:var(--sage-l)}
+    .btn-secondary{background:var(--sage-p);color:var(--sage)}
+    .btn-secondary:hover{background:var(--sage);color:var(--white)}
+    .btn-gold{background:var(--gold);color:var(--white)}
+    .btn-gold:hover{background:var(--gold-l)}
+    .btn-ghost{background:none;border:1.5px solid #E0DDD6;color:var(--mid)}
+    .btn-ghost:hover{border-color:var(--sage);color:var(--sage)}
+    .btn-danger{background:var(--red-l);color:var(--red)}
+    .btn-danger:hover{background:var(--red);color:var(--white)}
+    .btn-sm{padding:6px 14px;font-size:.72rem}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+
+    /* ── Cards ── */
+    .card{background:var(--white);border-radius:16px;padding:24px;border:1px solid #EEEBE4}
+    .card-sm{background:var(--white);border-radius:12px;padding:18px;border:1px solid #EEEBE4}
+
+    /* ── Stats grid ── */
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+    .stat-card{background:var(--white);border-radius:14px;padding:20px;border:1px solid #EEEBE4}
+    .stat-icon{font-size:1.4rem;margin-bottom:10px}
+    .stat-val{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--dark);line-height:1}
+    .stat-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+
+    /* ── Grid layouts ── */
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+    /* ── Table ── */
+    .table-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:.83rem}
+    th{text-align:left;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--muted);padding:10px 14px;border-bottom:2px solid #EEEBE4}
+    td{padding:12px 14px;border-bottom:1px solid #F5F2EC;color:var(--mid);vertical-align:middle}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:#FAFAF8}
+    .td-name{font-weight:600;color:var(--dark)}
+
+    /* ── Badge ── */
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:.68rem;font-weight:700;letter-spacing:.06em}
+    .badge-green{background:var(--green-l);color:var(--green)}
+    .badge-blue{background:var(--blue-l);color:var(--blue)}
+    .badge-yellow{background:var(--yellow-l);color:var(--yellow)}
+    .badge-red{background:var(--red-l);color:var(--red)}
+    .badge-gray{background:#F0EDE8;color:var(--muted)}
+    .badge-sage{background:var(--sage-p);color:var(--sage)}
+
+    /* ── Form elements ── */
+    .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+    .form-group label{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mid)}
+    .form-group input,.form-group select,.form-group textarea{
+      border:1.5px solid #E0DDD6;border-radius:10px;padding:10px 14px;
+      font-family:'Inter',sans-serif;font-size:.88rem;color:var(--dark);
+      background:var(--cream);outline:none;transition:border-color .15s;width:100%;
+    }
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--sage);background:var(--white)}
+    .form-group textarea{resize:vertical;min-height:80px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+    /* ── Modal ── */
+    .modal-bg{
+      position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;
+      display:none;align-items:center;justify-content:center;padding:24px;
+    }
+    .modal-bg.open{display:flex}
+    .modal{background:var(--white);border-radius:20px;padding:36px;width:100%;max-width:500px;
+      box-shadow:0 24px 64px rgba(0,0,0,.15);max-height:90vh;overflow-y:auto}
+    .modal-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;margin-bottom:4px}
+    .modal-sub{font-size:.82rem;color:var(--muted);margin-bottom:24px}
+    .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+    .modal-close{position:absolute;top:16px;right:16px}
+
+    /* ── Messages ── */
+    .msg-layout{display:grid;grid-template-columns:280px 1fr;gap:0;height:calc(100vh - 120px);border:1px solid #EEEBE4;border-radius:16px;overflow:hidden;background:var(--white)}
+    .msg-list{border-right:1px solid #EEEBE4;overflow-y:auto}
+    .msg-list-header{padding:16px;border-bottom:1px solid #EEEBE4;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    .msg-thread{padding:14px 16px;cursor:pointer;border-bottom:1px solid #F5F2EC;transition:background .15s}
+    .msg-thread:hover{background:#FAFAF8}
+    .msg-thread.active{background:var(--sage-p)}
+    .msg-thread-name{font-weight:600;font-size:.85rem;color:var(--dark)}
+    .msg-thread-preview{font-size:.75rem;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .msg-thread-time{font-size:.65rem;color:var(--muted);float:right}
+    .msg-thread-unread{width:8px;height:8px;background:var(--sage);border-radius:50%;margin-left:auto;flex-shrink:0}
+    .msg-chat{display:flex;flex-direction:column}
+    .msg-chat-header{padding:16px 20px;border-bottom:1px solid #EEEBE4;display:flex;align-items:center;gap:12px}
+    .msg-chat-name{font-weight:600;font-size:.9rem}
+    .msg-chat-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+    .msg-bubble{max-width:70%;padding:10px 14px;border-radius:16px;font-size:.85rem;line-height:1.55}
+    .msg-bubble.mine{background:var(--sage);color:var(--white);align-self:flex-end;border-bottom-right-radius:4px}
+    .msg-bubble.theirs{background:#F0EDE8;color:var(--dark);align-self:flex-start;border-bottom-left-radius:4px}
+    .msg-time{font-size:.65rem;color:var(--muted);margin-top:2px}
+    .msg-time.mine{text-align:right}
+    .msg-input-area{padding:14px 16px;border-top:1px solid #EEEBE4;display:flex;gap:10px;align-items:flex-end}
+    .msg-input{flex:1;border:1.5px solid #E0DDD6;border-radius:12px;padding:10px 14px;
+      font-family:'Inter',sans-serif;font-size:.88rem;resize:none;min-height:42px;max-height:120px;outline:none}
+    .msg-input:focus{border-color:var(--sage)}
+    .msg-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--muted);gap:10px}
+    .msg-empty-icon{font-size:2.5rem}
+
+    /* ── Doc cards ── */
+    .doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .doc-card{background:var(--white);border:1px solid #EEEBE4;border-radius:14px;padding:20px;transition:box-shadow .15s;cursor:pointer}
+    .doc-card:hover{box-shadow:0 4px 20px rgba(74,103,65,.1);border-color:var(--sage-p)}
+    .doc-icon{font-size:2rem;margin-bottom:10px}
+    .doc-title{font-weight:600;font-size:.88rem;color:var(--dark);margin-bottom:4px}
+    .doc-meta{font-size:.72rem;color:var(--muted)}
+    .doc-notes{font-size:.75rem;color:var(--mid);margin-top:8px;line-height:1.5;font-style:italic}
+
+    /* ── Alert ── */
+    .alert{border-radius:10px;padding:11px 16px;font-size:.82rem;margin-bottom:14px;display:none}
+    .alert.show{display:block}
+    .alert.error{background:var(--red-l);color:var(--red);border:1px solid #F1948A}
+    .alert.success{background:var(--green-l);color:var(--green);border:1px solid #82E0AA}
+
+    /* ── Empty state ── */
+    .empty{text-align:center;padding:60px 24px;color:var(--muted)}
+    .empty-icon{font-size:3rem;margin-bottom:12px}
+    .empty h3{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--mid);margin-bottom:6px}
+    .empty p{font-size:.85rem}
+
+    /* ── Upload zone ── */
+    .upload-zone{
+      border:2px dashed #D0CCC4;border-radius:14px;padding:40px;text-align:center;
+      transition:all .15s;cursor:pointer;
+    }
+    .upload-zone:hover,.upload-zone.drag{border-color:var(--sage);background:var(--sage-p)}
+    .upload-zone-icon{font-size:2.5rem;margin-bottom:10px}
+    .upload-zone p{font-size:.85rem;color:var(--muted)}
+    .upload-zone strong{color:var(--sage)}
+    #fileInput{display:none}
+
+    /* ── Loading ── */
+    .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+    .spinner.dark{border-color:rgba(74,103,65,.2);border-top-color:var(--sage)}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loading-screen{display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:12px;color:var(--muted);font-size:.85rem}
+
+    /* ── Client view: appointment card ── */
+    .apt-card{background:var(--white);border:1px solid #EEEBE4;border-radius:14px;padding:20px;display:flex;align-items:center;gap:16px}
+    .apt-date-box{background:var(--sage-p);border-radius:10px;padding:10px 14px;text-align:center;flex-shrink:0;min-width:60px}
+    .apt-month{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--sage)}
+    .apt-day{font-size:1.6rem;font-weight:700;color:var(--sage);line-height:1}
+    .apt-details{flex:1}
+    .apt-title{font-weight:600;font-size:.9rem;color:var(--dark)}
+    .apt-meta{font-size:.75rem;color:var(--muted);margin-top:3px}
+
+    /* ── Responsive ── */
+    @media(max-width:900px){
+      #sidebar{width:56px}
+      .sb-nav li a span.label,.sb-logo img,.sb-section-label,.sb-user-info,.sb-signout{display:none}
+      .stats-grid{grid-template-columns:1fr 1fr}
+      .grid-2,.grid-3{grid-template-columns:1fr}
+      .msg-layout{grid-template-columns:1fr}
+      .content{padding:16px}
+      .top-bar{padding:12px 16px}
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="loading-screen" id="loader">
+    <div class="spinner dark"></div>
+    Loading your portal…
+  </div>
+</div>
+
+<div id="modals"></div>
+
+<script>
+const SB_URL  = 'https://fpimnkzboivwqbrqrufh.supabase.co';
+const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwaW1ua3pib2l2d3FicnFydWZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5MTU2NTcsImV4cCI6MjA5MzQ5MTY1N30.UtfFtpFDpWApRS8mPiOeb2DDO_i66IU736iVc2xjJIk';
+const NETLIFY_PAT  = 'nfp_vxAzW6iW51Lz3V4f64ogRVAagkSuqCQ10169';
+const NETLIFY_SITE = '9466719c-00c3-4483-9a7f-80dcd7bd4be8';
+
+const { createClient } = supabase;
+const sb = createClient(SB_URL, SB_ANON);
+
+let STATE = { user: null, profile: null, activeSection: null, msgRecipient: null };
+
+// ─────────────────────────────────────────────
+// BOOT
+// ─────────────────────────────────────────────
+async function boot() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = '/login.html'; return; }
+
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+  if (!profile) { window.location.href = '/login.html'; return; }
+
+  STATE.user    = session.user;
+  STATE.profile = profile;
+
+  renderApp();
+
+  // Handle hash-based section routing
+  const hash = window.location.hash.replace('#','') || (profile.role === 'admin' ? 'overview' : 'home');
+  navigate(hash);
+}
+
+// ─────────────────────────────────────────────
+// RENDER APP SHELL
+// ─────────────────────────────────────────────
+function renderApp() {
+  const { profile } = STATE;
+  const isAdmin = profile.role === 'admin';
+  const initials = (profile.full_name || profile.email).split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+
+  const adminNav = `
+    <p class="sb-section-label">Main</p>
+    <ul class="sb-nav">
+      <li><a onclick="navigate('overview')" data-section="overview"><span class="icon">📊</span><span class="label">Overview</span></a></li>
+      <li><a onclick="navigate('clients')" data-section="clients"><span class="icon">👥</span><span class="label">Clients</span></a></li>
+      <li><a onclick="navigate('content')" data-section="content"><span class="icon">📁</span><span class="label">Content</span></a></li>
+      <li><a onclick="navigate('appointments')" data-section="appointments"><span class="icon">📅</span><span class="label">Appointments</span></a></li>
+    </ul>
+    <p class="sb-section-label">Communicate</p>
+    <ul class="sb-nav">
+      <li><a onclick="navigate('messages')" data-section="messages"><span class="icon">💬</span><span class="label">Messages</span><span class="sb-badge" id="sb-msg-badge" style="display:none">0</span></a></li>
+      <li><a onclick="navigate('inquiries')" data-section="inquiries"><span class="icon">📬</span><span class="label">Inquiries</span></a></li>
+    </ul>
+    <p class="sb-section-label">Billing</p>
+    <ul class="sb-nav">
+      <li><a onclick="navigate('invoices')" data-section="invoices"><span class="icon">💰</span><span class="label">Invoices</span></a></li>
+    </ul>`;
+
+  const clientNav = `
+    <ul class="sb-nav" style="margin-top:16px">
+      <li><a onclick="navigate('home')" data-section="home"><span class="icon">🏠</span><span class="label">Home</span></a></li>
+      <li><a onclick="navigate('meal-plan')" data-section="meal-plan"><span class="icon">🥗</span><span class="label">Meal Plan</span></a></li>
+      <li><a onclick="navigate('fitness')" data-section="fitness"><span class="icon">💪</span><span class="label">Fitness Plan</span></a></li>
+      <li><a onclick="navigate('labs')" data-section="labs"><span class="icon">🔬</span><span class="label">Lab Results</span></a></li>
+      <li><a onclick="navigate('my-appointments')" data-section="my-appointments"><span class="icon">📅</span><span class="label">Appointments</span></a></li>
+      <li><a onclick="navigate('messages')" data-section="messages"><span class="icon">💬</span><span class="label">Messages</span><span class="sb-badge" id="sb-msg-badge" style="display:none">0</span></a></li>
+    </ul>`;
+
+  document.getElementById('app').innerHTML = `
+    <div id="sidebar">
+      <div class="sb-logo"><img src="logo.svg" alt="A to Z Nutrition"/></div>
+      ${isAdmin ? adminNav : clientNav}
+      <div class="sb-footer">
+        <div class="sb-user">
+          <div class="sb-avatar">${initials}</div>
+          <div class="sb-user-info">
+            <div class="sb-user-name">${profile.full_name || profile.email}</div>
+            <div class="sb-user-role">${profile.role}</div>
+          </div>
+          <button class="sb-signout" onclick="signOut()">Sign out</button>
+        </div>
+      </div>
+    </div>
+    <div id="main">
+      <div class="top-bar">
+        <div>
+          <div class="page-title" id="pageTitle">Dashboard</div>
+          <div class="page-subtitle" id="pageSubtitle">A to Z Nutrition Virtual Clinic</div>
+        </div>
+        <div class="top-actions" id="topActions"></div>
+      </div>
+      <div class="content" id="content">
+        <div class="loading-screen"><div class="spinner dark"></div></div>
+      </div>
+    </div>`;
+
+  loadUnreadBadge();
+}
+
+// ─────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────
+function navigate(section) {
+  STATE.activeSection = section;
+  window.location.hash = section;
+
+  document.querySelectorAll('.sb-nav a').forEach(a => {
+    a.classList.toggle('active', a.dataset.section === section);
+  });
+
+  document.getElementById('topActions').innerHTML = '';
+
+  const sections = {
+    // Admin
+    overview:       [renderOverview,       'Overview',       'Good to see you, Anne'],
+    clients:        [renderClients,        'Clients',        'Manage your client roster'],
+    content:        [renderContent,        'Content',        'Upload & assign meal plans, fitness plans, and lab results'],
+    appointments:   [renderAppointments,   'Appointments',   'Manage client sessions'],
+    messages:       [renderMessages,       'Messages',       'Client communications'],
+    inquiries:      [renderInquiries,      'Inquiries',      'Contact form submissions from the website'],
+    invoices:       [renderInvoices,       'Invoices',       'Billing & payments'],
+    // Client
+    home:           [renderClientHome,     'My Portal',      `Welcome back, ${STATE.profile.full_name || 'there'}`],
+    'meal-plan':    [renderClientDocs.bind(null,'meal_plan'),    'Meal Plan',    'Your personalized nutrition plan'],
+    fitness:        [renderClientDocs.bind(null,'fitness_plan'), 'Fitness Plan', 'Your custom workout program'],
+    labs:           [renderClientDocs.bind(null,'lab_result'),   'Lab Results',  'Your functional medicine test results'],
+    'my-appointments': [renderClientAppointments, 'Appointments', 'Your sessions with Anne'],
+  };
+
+  const [fn, title, sub] = sections[section] || [renderOverview, 'Dashboard', ''];
+  document.getElementById('pageTitle').textContent    = title;
+  document.getElementById('pageSubtitle').textContent = sub;
+  fn();
+}
+
+// ─────────────────────────────────────────────
+// ADMIN: OVERVIEW
+// ─────────────────────────────────────────────
+async function renderOverview() {
+  setContent(`<div class="loading-screen"><div class="spinner dark"></div></div>`);
+
+  const [{ count: clientCount }, { count: docCount }, { count: unread }, { count: aptCount }] = await Promise.all([
+    sb.from('profiles').select('*',{count:'exact',head:true}).eq('role','client'),
+    sb.from('documents').select('*',{count:'exact',head:true}),
+    sb.from('messages').select('*',{count:'exact',head:true}).eq('recipient_id', STATE.user.id).is('read_at',null),
+    sb.from('appointments').select('*',{count:'exact',head:true}).eq('status','scheduled'),
+  ]);
+
+  const { data: recentClients } = await sb.from('profiles').select('*').eq('role','client').order('created_at',{ascending:false}).limit(5);
+  const { data: recentDocs }    = await sb.from('documents').select('*, profiles!documents_client_id_fkey(full_name,email)').order('created_at',{ascending:false}).limit(5);
+
+  setContent(`
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-val">${clientCount||0}</div><div class="stat-label">Active Clients</div></div>
+      <div class="stat-card"><div class="stat-icon">📁</div><div class="stat-val">${docCount||0}</div><div class="stat-label">Documents Shared</div></div>
+      <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-val">${unread||0}</div><div class="stat-label">Unread Messages</div></div>
+      <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-val">${aptCount||0}</div><div class="stat-label">Upcoming Sessions</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <strong style="font-size:.85rem">Recent Clients</strong>
+          <button class="btn btn-secondary btn-sm" onclick="navigate('clients')">View All</button>
+        </div>
+        ${recentClients?.length ? recentClients.map(c=>`
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F5F2EC">
+            <div class="sb-avatar" style="width:34px;height:34px;font-size:.7rem">${initials(c.full_name||c.email)}</div>
+            <div>
+              <div style="font-size:.85rem;font-weight:600">${c.full_name||'—'}</div>
+              <div style="font-size:.72rem;color:var(--muted)">${c.email}</div>
+            </div>
+            <div style="margin-left:auto"><button class="btn btn-ghost btn-sm" onclick="openMsgTo('${c.id}','${escape(c.full_name||c.email)}')">Message</button></div>
+          </div>`).join('') : '<div class="empty"><p>No clients yet</p></div>'}
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <strong style="font-size:.85rem">Recently Uploaded</strong>
+          <button class="btn btn-secondary btn-sm" onclick="navigate('content')">Upload</button>
+        </div>
+        ${recentDocs?.length ? recentDocs.map(d=>`
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F5F2EC">
+            <div style="font-size:1.3rem">${docIcon(d.type)}</div>
+            <div>
+              <div style="font-size:.85rem;font-weight:600">${d.title}</div>
+              <div style="font-size:.72rem;color:var(--muted)">${d.profiles?.full_name||d.profiles?.email||'Client'} · ${docTypeLabel(d.type)}</div>
+            </div>
+            <div style="margin-left:auto;font-size:.72rem;color:var(--muted)">${fmtDate(d.created_at)}</div>
+          </div>`).join('') : '<div class="empty"><p>No documents yet</p></div>'}
+      </div>
+    </div>`);
+}
+
+// ─────────────────────────────────────────────
+// ADMIN: CLIENTS
+// ─────────────────────────────────────────────
+async function renderClients() {
+  setContent(`<div class="loading-screen"><div class="spinner dark"></div></div>`);
+  document.getElementById('topActions').innerHTML = `<button class="btn btn-primary" onclick="showInviteModal()">+ Invite Client</button>`;
+
+  const { data: clients } = await sb.from('profiles').select('*').eq('role','client').order('created_at',{ascending:false});
+
+  setContent(`
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Client</th><th>Email</th><th>Joined</th><th>Actions</th></tr></thead>
+          <tbody>
+            ${clients?.length ? clients.map(c=>`
+              <tr>
+                <td><div style="display:flex;align-items:center;gap:10px">
+                  <div class="sb-avatar" style="width:34px;height:34px;font-size:.7rem;background:var(--sage)">${initials(c.full_name||c.email)}</div>
+                  <span class="td-name">${c.full_name||'—'}</span>
+                </div></td>
+                <td>${c.email}</td>
+                <td>${fmtDate(c.created_at)}</td>
+                <td>
+                  <div style="display:flex;gap:6px">
+                    <button class="btn btn-secondary btn-sm" onclick="navigate('content');setTimeout(()=>preselectClient('${c.id}'),300)">Upload</button>
+                    <button class="btn btn-ghost btn-sm" onclick="openMsgTo('${c.id}','${escape(c.full_name||c.email)}')">Message</button>
+                    <button class="btn btn-gold btn-sm" onclick="showInvoiceModal('${c.id}','${escape(c.full_name||c.email)}')">Invoice</button>
+                  </div>
+                </td>
+              </tr>`).join('') : `<tr><td colspan="4"><div class="empty"><div class="empty-icon">👥</div><h3>No clients yet</h3><p>Invite your first client to get started.</p></div></td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>`);
+}
+
+// ─────────────────────────────────────────────
+// ADMIN: CONTENT UPLOAD
+// ─────────────────────────────────────────────
+async function renderContent() {
+  setContent(`<div class="loading-screen"><div class="spinner dark"></div></div>`);
+
+  const { data: clients } = await sb.from('profiles').select('id,full_name,email').eq('role','client').order('full_name');
+  const { data: docs }    = await sb.from('documents').select('*, profiles!documents_client_id_fkey(full_name,email)').order('created_at',{ascending:false});
+
+  const clientOpts = clients?.map(c=>`<option value="${c.id}">${c.full_name||c.email}</option>`).join('') || '';
+
+  setContent(`
+    <div class="grid-2" style="align-items:start">
+      <div>
+        <div class="card" style="margin-bottom:20px">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin-bottom:16px">Upload Document</h3>
+          <div id="uploadAlert" class="alert"></div>
+          <div class="form-group">
+            <label>Client</label>
+            <select id="uploadClient"><option value="">Select client…</option>${clientOpts}</select>
+          </div>
+          <div class="form-group">
+            <label>Document Type</label>
+            <select id="uploadType">
+              <option value="meal_plan">🥗 Meal Plan</option>
+              <option value="fitness_plan">💪 Fitness Plan</option>
+              <option value="lab_result">🔬 Lab Result</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" id="uploadTitle" placeholder="e.g. Week 1 Meal Plan"/>
+          </div>
+          <div class="form-group">
+            <label>Notes for Client (optional)</label>
+            <textarea id="uploadNotes" placeholder="Any context or instructions for the client…"></textarea>
+          </div>
+          <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-zone-icon">📄</div>
+            <p><strong>Click to select PDF</strong> or drag & drop here</p>
+            <p id="uploadFileName" style="margin-top:8px;font-size:.75rem;color:var(--sage)"></p>
+          </div>
+          <input type="file" id="fileInput" accept="application/pdf" onchange="onFileSelect(this)"/>
+          <button class="btn btn-primary" style="width:100%;margin-top:14px;justify-content:center" id="uploadBtn" onclick="doUpload()">
+            Upload & Assign to Client
+          </button>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin-bottom:16px">All Documents</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Title</th><th>Type</th><th>Client</th><th>Date</th><th></th></tr></thead>
+            <tbody id="docsTable">
+              ${docs?.length ? docs.map(d=>`
+                <tr>
+                  <td class="td-name">${d.title}</td>
+                  <td><span class="badge badge-sage">${docTypeLabel(d.type)}</span></td>
+                  <td>${d.profiles?.full_name||d.profiles?.email||'—'}</td>
+                  <td>${fmtDate(d.created_at)}</td>
+                  <td>
+                    <button class="btn btn-ghost btn-sm" onclick="downloadDoc('${d.file_path}','${escape(d.title)}')">↓</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteDoc('${d.id}','${d.file_path}')">✕</button>
+                  </td>
+                </tr>`).join('') : `<tr><td colspan="5"><div class="empty" style="padding:30px"><p>No documents uploaded yet</p></div></td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`);
+
+  // Drag-drop
+  const zone = document.getElementById('uploadZone');
+  zone.addEventListener('dragover', e=>{e.preventDefault();zone.classList.add('drag')});
+  zone.addEventListener('dragleave', ()=>zone.classList.remove('drag'));
+  zone.addEventListener('drop', e=>{
+    e.preventDefault(); zone.classList.remove('drag');
+    const f = e.dataTransfer.files[0];
+    if(f?.type==='application/pdf'){
+      STATE.uploadFile = f;
+      document.getElementById('uploadFileName').textContent = f.name;
+    }
+  });
+}
+
+function onFileSelect(input) {
+  if(input.files[0]) {
+    STATE.uploadFile = input.files[0];
+    document.getElementById('uploadFileName').textContent = input.files[0].name;
+  }
+}
+
+function preselectClient(id) {
+  const sel = document.getElementById('uploadClient');
+  if(sel) sel.value = id;
+}
+
+async function doUpload() {
+  const clientId = document.getElementById('uploadClient').value;
+  const type     = document.getElementById('uploadType').value;
+  const title    = document.getElementById('uploadTitle').value.trim();
+  const notes    = document.getElementById('uploadNotes').value.trim();
+  const file     = STATE.uploadFile;
+  const alertEl  = document.getElementById('uploadAlert');
+
+  if(!clientId||!title||!file) { showAlert(alertEl,'Please fill in all required fields and select a PDF.','error'); return; }
+
+  const btn = document.getElementById('uploadBtn');
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Uploading…';
+
+  const path = `${clientId}/${type}/${Date.now()}_${file.name.replace(/[^a-z0-9._-]/gi,'_')}`;
+
+  const { error: upErr } = await sb.storage.from('documents').upload(path, file);
+  if(upErr) { showAlert(alertEl, upErr.message,'error'); btn.disabled=false; btn.textContent='Upload & Assign to Client'; return; }
+
+  const { error: dbErr } = await sb.from('documents').insert({
+    client_id: clientId, uploaded_by: STATE.user.id,
+    type, title, file_path: path, notes: notes||null
+  });
+
+  if(dbErr) { showAlert(alertEl, dbErr.message,'error'); }
+  else      { showAlert(alertEl,'Document uploaded and assigned successfully!','success'); STATE.uploadFile=null; document.getElementById('uploadFileName').textContent=''; document.getElementById('uploadTitle').value=''; document.getElementById('uploadNotes').value=''; renderContent(); }
+
+  btn.disabled=false; btn.textContent='Upload & Assign to Client';
+}
+
+async function downloadDoc(path, title) {
+  const { data } = await sb.storage.from('documents').createSignedUrl(path, 60);
+  if(data?.signedUrl) { const a=document.createElement('a'); a.href=data.signedUrl; a.download=unescape(title)+'.pdf'; a.click(); }
+}
+
+async function deleteDoc(id, path) {
+  if(!confirm('Delete this document? The client will no longer be able to access it.')) return;
+  await sb.storage.from('documents').remove([path]);
+  await sb.from('documents').delete().eq('id',id);
+  renderContent();
+}
+
+// ─────────────────────────────────────────────
+// ADMIN: APPOINTMENTS
+// ─────────────────────────────────────────────
+async function renderAppointments() {
+  setContent(`<div class="loading-screen"><div class="spinner dark"></div></div>`);
+  document.getElementById('topActions').innerHTML = `<button class="btn btn-primary" onclick="showAptModal()">+ Schedule Session</button>`;
+
+  const { data: apts } = await sb.from('appointments').select('*, profiles!appointments_client_id_fkey(full_name,email)').order('scheduled_at',{ascending:true});
+
+  setContent(`
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Client</th><th>Date & Time</th><th>Type</th><th>Duration</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            ${apts?.length ? apts.map(a=>`
+              <tr>
+                <td class="td-name">${a.profiles?.full_name||a.profiles?.email||'—'}</td>
+                <td>${a.scheduled_at ? fmtDateTime(a.scheduled_at) : '—'}</td>
+                <td>${a.type}</td>
+                <td>${a.duration_minutes} min</td>
+                <td><span class="badge ${aptBadge(a.status)}">${a.status}</span></td>
+                <td>
+                  <div style="display:flex;gap:6px">
+                    ${a.meeting_url ? `<a class="btn btn-secondary btn-sm" href="${a.meeting_url}" target="_blank">Join</a>`:''}
+                    <button class="btn btn-ghost btn-sm" onclick="markAptComplete('${a.id}')">✓ Done</button>
+                  </div>
+                </td>
+              </tr>`).join('') : `<tr><td colspan="6"><div class="empty"><div class="empty-icon">📅</div><h3>No appointments yet</h3></div></td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>`);
+}
+
+async function markAptComplete(id) {
+  await sb.from('appointments').update({status:'completed'}).eq('id',id);
+  renderAppointments();
+}
+
+// ─────────────────────────────────────────────
+// ADMIN: INQUIRIES (Netlify form submissions)
+// ─────────────────────────────────────────────
+async function renderInquiries() {
+  setContent(`<div class="loading-screen"><div class="spinner dark"></div></div>`);
+
+  try {
+    // Get forms for this site
+    const formsRes = await fetch(`https://api.netlify.com/api/v1/sites/${NETLIFY_SITE}/forms`, {
+      headers:{ Authorization: `Bearer ${NETLIFY_PAT}` }
+    });
+    const forms = await formsRes.json();
+    const contactForm = forms.find(f=>f.name==='contact');
+
+    if(!contactForm) {
+      setContent(`<div class="empty"><div class="empty-icon">📬</div><h3>No submissions yet</h3><p>Contact form submissions from the website will appear here once people start reaching out.</p></div>`);
+      return;
+    }
+
+    const subRes = await fetch(`https://api.netlify.com/api/v1/forms/${contactForm.id}/submissions?per_page=50`, {
+      headers:{ Authorization: `Bearer ${NETLIFY_PAT}` }
+    });
+    const subs = await subRes.json();
+
+    setContent(`
+      <div class="card">
+        <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:.82rem;color:var(--muted)">${subs.length} submission${subs.length!==1?'s':''}</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Email</th><th>Program</th><th>Message</th><th>Date</th></tr></thead>
+            <tbody>
+              ${subs.length ? subs.map(s=>`
+                <tr>
+                  <td class="td-name">${s.data?.['first-name']||''} ${s.data?.['last-name']||''}</td>
+                  <td><a href="mailto:${s.data?.email}" style="color:var(--sage)">${s.data?.email||'—'}</a></td>
+                  <td><span class="badge badge-sage" style="white-space:nowrap">${programLabel(s.data?.program)||'—'}</span></td>
+                  <td style="max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.data?.message||'—'}</td>
+                  <td style="white-space:nowrap">${fmtDate(s.created_at)}</td>
+                </tr>`).join('') : `<tr><td colspan="5"><div class="empty"><p>No submissions yet</p></div></td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      </div>`);
+  } catch(e) {
+    setContent(`<div class="empty"><div class="empty-icon">📬</div><h3>Could not load inquiries</h3><p>${e.message}</p></div>`);
+  }
+}
+
+// ─────────────────────────────────────────────
+// ADMIN: INVOICES
+// ─────────────────────────────────────────────
+async function renderInvoices() {
+  setContent(`<div class="loading-screen"><div class="spinner dark"></div></div>`);
+  document.getElementById('topActions').innerHTML = `<button class="btn btn-gold" onclick="showInvoiceModal()">+ Create Invoice</button>`;
+
+  const { data: invoices } = await sb.from('invoices').select('*, profiles!invoices_client_id_fkey(full_name,email)').order('created_at',{ascending:false});
+
+  setContent(`
+    <div class="card" style="margin-bottom:20px;background:var(--yellow-l);border-color:#F0D060">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:1.4rem">⚡</span>
+        <div>
+          <strong style="font-size:.85rem">Stripe not yet connected</strong>
+          <p style="font-size:.8rem;color:var(--mid);margin-top:2px">Add your Stripe keys to enable online payment links, automatic receipts, and payment tracking.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Client</th><th>Description</th><th>Amount</th><th>Due</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            ${invoices?.length ? invoices.map(inv=>`
+              <tr>
+                <td class="td-name">${inv.profiles?.full_name||inv.profiles?.email||'—'}</td>
+                <td>${inv.description}</td>
+                <td>$${(inv.amount_cents/100).toFixed(2)}</td>
+                <td>${inv.due_date ? fmtDate(inv.due_date) : '—'}</td>
+                <td><span class="badge ${invBadge(inv.status)}">${inv.status}</span></td>
+                <td>
+                  <div style="display:flex;gap:6px">
+                    ${inv.status==='draft'?`<button class="btn btn-primary btn-sm" onclick="markInvoiceSent('${inv.id}')">Mark Sent</button>`:''}
+                    ${inv.status==='sent'?`<button class="btn btn-gold btn-sm" onclick="markInvoicePaid('${inv.id}')">Mark Paid</button>`:''}
+                  </div>
+                </td>
+              </tr>`).join('') : `<tr><td colspan="6"><div class="empty"><div class="empty-icon">💰</div><h3>No invoices yet</h3></div></td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>`);
+}
+
+async function markInvoiceSent(id) { await sb.from('invoices').update({status:'sent'}).eq('id',id); renderInvoices(); }
+async function markInvoicePaid(id) { await sb.from('invoices').update({status:'paid',paid_at:new Date().toISOString()}).eq('id',id); renderInvoices(); }
+
+// ─────────────────────────────────────────────
+// MESSAGES (shared admin + client)
+// ─────────────────────────────────────────────
+async function renderMessages() {
+  const isAdmin = STATE.profile.role === 'admin';
+
+  setContent(`<div class="msg-layout">
+    <div class="msg-list">
+      <div class="msg-list-header">Conversations</div>
+      <div id="threadList"><div class="loading-screen" style="height:100px"><div class="spinner dark"></div></div></div>
+    </div>
+    <div class="msg-chat" id="msgChat">
+      <div class="msg-empty"><div class="msg-empty-icon">💬</div><p>Select a conversation</p></div>
+    </div>
+  </div>`);
+
+  // Load conversations
+  if(isAdmin) {
+    const { data: clients } = await sb.from('profiles').select('id,full_name,email').eq('role','client');
+    document.getElementById('threadList').innerHTML = clients?.length
+      ? clients.map(c=>`<div class="msg-thread" onclick="openChat('${c.id}','${escape(c.full_name||c.email)}')">
+          <span class="msg-thread-name">${c.full_name||c.email}</span>
+          <div class="msg-thread-preview">${c.email}</div>
+        </div>`).join('')
+      : '<div style="padding:16px;font-size:.8rem;color:var(--muted)">No clients yet</div>';
+  } else {
+    // Client: open chat with admin
+    const { data: admin } = await sb.from('profiles').select('id,full_name,email').eq('role','admin').limit(1).single();
+    if(admin) {
+      document.getElementById('threadList').innerHTML = `<div class="msg-thread active" onclick="openChat('${admin.id}','${escape(admin.full_name||'Anne')}')">
+        <span class="msg-thread-name">${admin.full_name||'Anne'}</span>
+        <div class="msg-thread-preview">Your nutritionist</div>
+      </div>`;
+      openChat(admin.id, admin.full_name||'Anne');
+    }
+  }
+
+  if(STATE.msgRecipient) {
+    openChat(STATE.msgRecipient.id, STATE.msgRecipient.name);
+    STATE.msgRecipient = null;
+  }
+}
+
+async function openChat(recipientId, name) {
+  document.querySelectorAll('.msg-thread').forEach(t=>t.classList.remove('active'));
+  const thread = document.querySelector(`.msg-thread[onclick*="${recipientId}"]`);
+  if(thread) thread.classList.add('active');
+
+  const chat = document.getElementById('msgChat');
+  chat.innerHTML = `
+    <div class="msg-chat-header">
+      <div class="sb-avatar" style="width:34px;height:34px;font-size:.7rem">${initials(unescape(name))}</div>
+      <div class="msg-chat-name">${unescape(name)}</div>
+    </div>
+    <div class="msg-chat-body" id="chatBody"><div class="loading-screen" style="height:80px"><div class="spinner dark"></div></div></div>
+    <div class="msg-input-area">
+      <textarea class="msg-input" id="msgInput" placeholder="Type a message…" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg('${recipientId}')}"></textarea>
+      <button class="btn btn-primary btn-sm" onclick="sendMsg('${recipientId}')">Send</button>
+    </div>`;
+
+  await loadChat(recipientId);
+
+  // Mark messages as read
+  await sb.from('messages').update({read_at:new Date().toISOString()}).eq('sender_id',recipientId).eq('recipient_id',STATE.user.id).is('read_at',null);
+  loadUnreadBadge();
+
+  // Realtime
+  if(STATE.chatSub) sb.removeChannel(STATE.chatSub);
+  STATE.chatSub = sb.channel(`chat-${recipientId}`)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages'},(payload)=>{
+      const m = payload.new;
+      if((m.sender_id===recipientId&&m.recipient_id===STATE.user.id)||(m.sender_id===STATE.user.id&&m.recipient_id===recipientId)){
+        appendMsg(m);
+        sb.from('messages').update({read_at:new Date().toISOString()}).eq('id',m.id).eq('recipient_id',STATE.user.id);
+      }
+    }).subscribe();
+}
+
+async function loadChat(recipientId) {
+  const { data: msgs } = await sb.from('messages').select('*')
+    .or(`and(sender_id.eq.${STATE.user.id},recipient_id.eq.${recipientId}),and(sender_id.eq.${recipientId},recipient_id.eq.${STATE.user.id})`)
+    .order('created_at');
+
+  const body = document.getElementById('chatBody');
+  if(!body) return;
+  body.innerHTML = msgs?.length ? msgs.map(m=>msgBubble(m)).join('') : `<div class="msg-empty"><div class="msg-empty-icon">👋</div><p>Send a message to start the conversation</p></div>`;
+  body.scrollTop = body.scrollHeight;
+}
+
+function appendMsg(m) {
+  const body = document.getElementById('chatBody');
+  if(!body) return;
+  const empty = body.querySelector('.msg-empty');
+  if(empty) empty.remove();
+  body.insertAdjacentHTML('beforeend', msgBubble(m));
+  body.scrollTop = body.scrollHeight;
+}
+
+function msgBubble(m) {
+  const mine = m.sender_id === STATE.user.id;
+  return `<div>
+    <div class="msg-bubble ${mine?'mine':'theirs'}">${escHtml(m.content)}</div>
+    <div class="msg-time ${mine?'mine':''}">${fmtTime(m.created_at)}</div>
+  </div>`;
+}
+
+async function sendMsg(recipientId) {
+  const input = document.getElementById('msgInput');
+  const content = input?.value.trim();
+  if(!content) return;
+  input.value = '';
+  input.style.height='';
+  await sb.from('messages').insert({sender_id:STATE.user.id, recipient_id:recipientId, content});
+}
+
+function openMsgTo(id, name) {
+  STATE.msgRecipient = {id, name};
+  navigate('messages');
+}
+
+// ─────────────────────────────────────────────
+// CLIENT: HOME
+// ─────────────────────────────────────────────
+async function renderClientHome() {
+  setContent(`<div class="loading-screen"><div class="spinner dark"></div></div>`);
+
+  const [{ data: docs }, { data: apts }, { count: unread }] = await Promise.all([
+    sb.from('documents').select('*').eq('client_id',STATE.user.id).order('created_at',{ascending:false}).limit(3),
+    sb.from('appointments').select('*').eq('client_id',STATE.user.id).eq('status','scheduled').order('scheduled_at').limit(1),
+    sb.from('messages').select('*',{count:'exact',head:true}).eq('recipient_id',STATE.user.id).is('read_at',null),
+  ]);
+
+  const next = apts?.[0];
+
+  setContent(`
+    <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="stat-card"><div class="stat-icon">📁</div><div class="stat-val">${docs?.length||0}</div><div class="stat-label">Documents</div></div>
+      <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-val">${next?'1':'0'}</div><div class="stat-label">Upcoming Session</div></div>
+      <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-val">${unread||0}</div><div class="stat-label">New Messages</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:20px">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:14px">Next Appointment</h3>
+          ${next ? `<div class="apt-card">
+            <div class="apt-date-box">
+              <div class="apt-month">${new Date(next.scheduled_at).toLocaleString('en-US',{month:'short'})}</div>
+              <div class="apt-day">${new Date(next.scheduled_at).getDate()}</div>
+            </div>
+            <div class="apt-details">
+              <div class="apt-title">${next.type}</div>
+              <div class="apt-meta">${fmtDateTime(next.scheduled_at)} · ${next.duration_minutes} min</div>
+              ${next.notes?`<div class="apt-meta" style="margin-top:4px">${next.notes}</div>`:''}
+            </div>
+            ${next.meeting_url?`<a class="btn btn-primary btn-sm" href="${next.meeting_url}" target="_blank">Join</a>`:''}
+          </div>` : `<div class="empty" style="padding:20px"><p>No upcoming sessions</p><button class="btn btn-secondary btn-sm" style="margin-top:10px" onclick="navigate('my-appointments')">Book a Session</button></div>`}
+        </div>
+
+        <div class="card">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:14px">Quick Links</h3>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('meal-plan')">🥗 View My Meal Plan</button>
+            <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('fitness')">💪 View My Fitness Plan</button>
+            <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('labs')">🔬 View Lab Results</button>
+            <button class="btn btn-ghost" style="justify-content:flex-start" onclick="navigate('messages')">💬 Message Anne</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:14px">Recent Documents</h3>
+        ${docs?.length ? docs.map(d=>`
+          <div class="doc-card" style="margin-bottom:10px" onclick="downloadDoc('${d.file_path}','${escape(d.title)}')">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:1.4rem">${docIcon(d.type)}</span>
+              <div>
+                <div class="doc-title">${d.title}</div>
+                <div class="doc-meta">${docTypeLabel(d.type)} · ${fmtDate(d.created_at)}</div>
+              </div>
+              <span style="margin-left:auto;color:var(--muted);font-size:1rem">↓</span>
+            </div>
+          </div>`).join('') : `<div class="empty" style="padding:20px"><p>No documents yet — Anne will upload your plan soon.</p></div>`}
+      </div>
+    </div>`);
+}
+
+// ─────────────────────────────────────────────
+// CLIENT: DOCUMENTS (meal plan / fitness / labs)
+// ─────────────────────────────────────────────
+async function renderClientDocs(type) {
+  setContent(`<div class="loading-screen"><div class="spinner dark"></div></div>`);
+
+  const { data: docs } = await sb.from('documents').select('*').eq('client_id',STATE.user.id).eq('type',type).order('created_at',{ascending:false});
+
+  setContent(docs?.length
+    ? `<div class="doc-grid">${docs.map(d=>`
+        <div class="doc-card" onclick="downloadDoc('${d.file_path}','${escape(d.title)}')">
+          <div class="doc-icon">${docIcon(type)}</div>
+          <div class="doc-title">${d.title}</div>
+          <div class="doc-meta">${fmtDate(d.created_at)}</div>
+          ${d.notes?`<div class="doc-notes">"${d.notes}"</div>`:''}
+          <button class="btn btn-primary btn-sm" style="margin-top:12px;width:100%;justify-content:center">↓ Download PDF</button>
+        </div>`).join('')}</div>`
+    : `<div class="empty"><div class="empty-icon">${docIcon(type)}</div><h3>Nothing here yet</h3><p>Anne will upload your ${docTypeLabel(type).toLowerCase()} here once it's ready.</p></div>`
+  );
+}
+
+// ─────────────────────────────────────────────
+// CLIENT: APPOINTMENTS
+// ─────────────────────────────────────────────
+async function renderClientAppointments() {
+  setContent(`<div class="loading-screen"><div class="spinner dark"></div></div>`);
+
+  const { data: apts } = await sb.from('appointments').select('*').eq('client_id',STATE.user.id).order('scheduled_at',{ascending:false});
+
+  setContent(`
+    <div class="card" style="margin-bottom:20px;background:var(--sage-p);border-color:var(--sage-l)">
+      <div style="display:flex;gap:12px;align-items:center">
+        <span style="font-size:1.4rem">📅</span>
+        <div>
+          <strong style="font-size:.88rem">Ready to book your next session?</strong>
+          <p style="font-size:.8rem;color:var(--mid);margin-top:2px">Reach out to Anne via <a href="#" onclick="navigate('messages')" style="color:var(--sage)">Messages</a> or use the contact form on the website to schedule your next appointment.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:16px">Your Sessions</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date & Time</th><th>Type</th><th>Duration</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            ${apts?.length ? apts.map(a=>`
+              <tr>
+                <td>${a.scheduled_at ? fmtDateTime(a.scheduled_at) : 'TBD'}</td>
+                <td>${a.type}</td>
+                <td>${a.duration_minutes} min</td>
+                <td><span class="badge ${aptBadge(a.status)}">${a.status}</span></td>
+                <td>${a.meeting_url && a.status==='scheduled' ? `<a class="btn btn-primary btn-sm" href="${a.meeting_url}" target="_blank">Join</a>`:''}</td>
+              </tr>`).join('') : `<tr><td colspan="5"><div class="empty"><div class="empty-icon">📅</div><h3>No sessions yet</h3></div></td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>`);
+}
+
+// ─────────────────────────────────────────────
+// MODALS
+// ─────────────────────────────────────────────
+function showInviteModal() {
+  openModal(`
+    <div class="modal-title">Invite a Client</div>
+    <div class="modal-sub">They'll receive an email to set up their portal account.</div>
+    <div id="invAlert" class="alert"></div>
+    <div class="form-group"><label>Full Name</label><input type="text" id="invName" placeholder="Jane Smith"/></div>
+    <div class="form-group"><label>Email Address *</label><input type="email" id="invEmail" placeholder="jane@email.com"/></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="doInvite()">Send Invitation</button>
+    </div>`);
+}
+
+async function doInvite() {
+  const name  = document.getElementById('invName').value.trim();
+  const email = document.getElementById('invEmail').value.trim();
+  const alert = document.getElementById('invAlert');
+  if(!email) { showAlert(alert,'Email is required.','error'); return; }
+
+  const { error } = await sb.auth.admin?.inviteUserByEmail
+    ? await sb.auth.admin.inviteUserByEmail(email, {data:{full_name:name,role:'client'}})
+    : { error: {message:'Admin API not available from client — use Supabase dashboard to invite.'} };
+
+  if(error) {
+    // Fallback: create via magic link approach
+    showAlert(alert, 'To invite clients, go to your Supabase dashboard → Authentication → Users → Invite User. This will be automated with a Netlify function in the next build.', 'error');
+  } else {
+    showAlert(alert,`Invitation sent to ${email}!`,'success');
+    setTimeout(()=>{closeModal();renderClients();},1500);
+  }
+}
+
+function showAptModal(clientId='') {
+  openModal(async ()=>{
+    const { data: clients } = await sb.from('profiles').select('id,full_name,email').eq('role','client');
+    const opts = clients?.map(c=>`<option value="${c.id}" ${c.id===clientId?'selected':''}>${c.full_name||c.email}</option>`).join('');
+    return `
+      <div class="modal-title">Schedule Session</div>
+      <div id="aptAlert" class="alert"></div>
+      <div class="form-group"><label>Client *</label><select id="aptClient"><option value="">Select…</option>${opts}</select></div>
+      <div class="form-row">
+        <div class="form-group"><label>Date & Time *</label><input type="datetime-local" id="aptDate"/></div>
+        <div class="form-group"><label>Duration</label><select id="aptDur"><option value="30">30 min</option><option value="45">45 min</option><option value="60" selected>60 min</option><option value="90">90 min</option></select></div>
+      </div>
+      <div class="form-group"><label>Session Type</label><input type="text" id="aptType" value="Initial Consultation"/></div>
+      <div class="form-group"><label>Meeting URL</label><input type="url" id="aptUrl" placeholder="https://zoom.us/j/…"/></div>
+      <div class="form-group"><label>Notes</label><textarea id="aptNotes" placeholder="Any notes for the client…"></textarea></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="doCreateApt()">Schedule</button>
+      </div>`;
+  });
+}
+
+async function doCreateApt() {
+  const apt = {
+    client_id:        document.getElementById('aptClient').value,
+    scheduled_at:     document.getElementById('aptDate').value ? new Date(document.getElementById('aptDate').value).toISOString() : null,
+    duration_minutes: parseInt(document.getElementById('aptDur').value),
+    type:             document.getElementById('aptType').value,
+    meeting_url:      document.getElementById('aptUrl').value||null,
+    notes:            document.getElementById('aptNotes').value||null,
+  };
+  if(!apt.client_id) { showAlert(document.getElementById('aptAlert'),'Select a client.','error'); return; }
+  const { error } = await sb.from('appointments').insert(apt);
+  if(error) { showAlert(document.getElementById('aptAlert'),error.message,'error'); }
+  else { closeModal(); renderAppointments(); }
+}
+
+function showInvoiceModal(clientId='', clientName='') {
+  openModal(`
+    <div class="modal-title">Create Invoice</div>
+    <div id="invInvAlert" class="alert"></div>
+    <div class="form-group"><label>Client *</label><input type="text" id="invClientId" value="${clientId}" style="display:none"/><input type="text" id="invClientDisplay" value="${unescape(clientName)}" placeholder="Client name" readonly style="cursor:not-allowed;opacity:.7"/></div>
+    <div class="form-row">
+      <div class="form-group"><label>Amount ($) *</label><input type="number" id="invAmount" placeholder="0.00" step="0.01"/></div>
+      <div class="form-group"><label>Due Date</label><input type="date" id="invDue"/></div>
+    </div>
+    <div class="form-group"><label>Description *</label><input type="text" id="invDesc" placeholder="e.g. Total Wellness Package – Month 1"/></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="doCreateInvoice()">Create Invoice</button>
+    </div>`);
+}
+
+async function doCreateInvoice() {
+  const clientId = document.getElementById('invClientId').value;
+  const amount   = parseFloat(document.getElementById('invAmount').value);
+  const desc     = document.getElementById('invDesc').value.trim();
+  const due      = document.getElementById('invDue').value||null;
+  const al       = document.getElementById('invInvAlert');
+
+  if(!clientId||!amount||!desc) { showAlert(al,'Fill in all required fields.','error'); return; }
+  const { error } = await sb.from('invoices').insert({client_id:clientId,amount_cents:Math.round(amount*100),description:desc,due_date:due});
+  if(error) { showAlert(al,error.message,'error'); }
+  else { closeModal(); navigate('invoices'); }
+}
+
+function openModal(htmlOrFn) {
+  const bg = document.createElement('div');
+  bg.className = 'modal-bg';
+  bg.id = 'modalBg';
+  bg.onclick = e => { if(e.target===bg) closeModal(); };
+
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  bg.appendChild(modal);
+  document.body.appendChild(bg);
+  requestAnimationFrame(()=>bg.classList.add('open'));
+
+  if(typeof htmlOrFn === 'function') {
+    modal.innerHTML = '<div class="loading-screen" style="height:100px"><div class="spinner dark"></div></div>';
+    Promise.resolve(htmlOrFn()).then(html=>{ modal.innerHTML = html; });
+  } else {
+    modal.innerHTML = htmlOrFn;
+  }
+}
+
+function closeModal() {
+  const bg = document.getElementById('modalBg');
+  if(bg) bg.remove();
+}
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+function setContent(html) { document.getElementById('content').innerHTML = html; }
+function initials(name) { return (name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtDate(d) { return d ? new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—'; }
+function fmtDateTime(d) { return d ? new Date(d).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '—'; }
+function fmtTime(d) { return d ? new Date(d).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) : ''; }
+function docIcon(t) { return t==='meal_plan'?'🥗':t==='fitness_plan'?'💪':'🔬'; }
+function docTypeLabel(t) { return t==='meal_plan'?'Meal Plan':t==='fitness_plan'?'Fitness Plan':'Lab Result'; }
+function aptBadge(s) { return s==='scheduled'?'badge-blue':s==='completed'?'badge-green':'badge-red'; }
+function invBadge(s) { return s==='paid'?'badge-green':s==='sent'?'badge-blue':s==='void'?'badge-red':'badge-gray'; }
+function programLabel(p) {
+  const map = {'nourish-thrive':'Nourish & Thrive','empowerment':'Empowerment','total-wellness':'Total Wellness','not-sure':'Not sure yet'};
+  return map[p] || p;
+}
+function escape(s) { return encodeURIComponent(s||''); }
+function unescape(s) { try{ return decodeURIComponent(s||''); }catch{ return s; } }
+
+function showAlert(el,msg,type) {
+  el.textContent = msg;
+  el.className = `alert ${type} show`;
+}
+
+async function loadUnreadBadge() {
+  const { count } = await sb.from('messages').select('*',{count:'exact',head:true}).eq('recipient_id',STATE.user.id).is('read_at',null);
+  const badge = document.getElementById('sb-msg-badge');
+  if(badge) { badge.textContent = count||0; badge.style.display = count ? 'inline' : 'none'; }
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  window.location.href = '/login.html';
+}
+
+// ─────────────────────────────────────────────
+// GO
+// ─────────────────────────────────────────────
+boot();
+</script>
+</body>
+</html>
