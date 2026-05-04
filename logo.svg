@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 90" fill="none">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#A07820"/>
+      <stop offset="35%"  stop-color="#E2C060"/>
+      <stop offset="65%"  stop-color="#D4A830"/>
+      <stop offset="100%" stop-color="#B08820"/>
+    </linearGradient>
+    <linearGradient id="goldV" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#EDD070"/>
+      <stop offset="100%" stop-color="#A07820"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ── Bordered box ── -->
+  <rect x="3" y="6" width="116" height="68" rx="4" stroke="url(#gold)" stroke-width="2.5"/>
+
+  <!-- A (blue, bold) -->
+  <text x="11" y="62" font-family="Georgia,Times New Roman,serif" font-size="48"
+        font-weight="bold" fill="#1C5FA8">A</text>
+
+  <!-- to (gold, smaller) -->
+  <text x="48" y="57" font-family="Georgia,Times New Roman,serif" font-size="20"
+        fill="url(#goldV)">to</text>
+
+  <!-- Z (blue, bold) -->
+  <text x="78" y="62" font-family="Georgia,Times New Roman,serif" font-size="48"
+        font-weight="bold" fill="#1C5FA8">Z</text>
+
+  <!-- ── "Nutri" ── -->
+  <text x="130" y="60" font-family="Georgia,Times New Roman,serif" font-size="44"
+        fill="url(#goldV)">Nutri</text>
+
+  <!-- ── Plant icon (sits where the "i" dot would be, ~x=262, y=14) ── -->
+  <!-- fruit body -->
+  <circle cx="267" cy="22" r="7.5" fill="url(#gold)"/>
+  <!-- leaf -->
+  <ellipse cx="267" cy="13" rx="4.5" ry="7" fill="#3A8C3A" transform="rotate(-18 267 13)"/>
+  <!-- stem -->
+  <line x1="267" y1="15" x2="267" y2="20" stroke="#5AAA4A" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- ── "tion" (offset to start after the i stem) ── -->
+  <text x="271" y="60" font-family="Georgia,Times New Roman,serif" font-size="44"
+        fill="url(#goldV)">tion</text>
+
+  <!-- ── VIRTUAL CLINIC ── -->
+  <text x="131" y="78" font-family="Arial,Helvetica,sans-serif" font-size="11.5"
+        font-weight="600" fill="#1C5FA8" letter-spacing="4.5">VIRTUAL CLINIC</text>
+</svg>

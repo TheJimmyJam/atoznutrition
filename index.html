@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A to Z Nutrition | Anne Apodaca, MS-HNFM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sage:       #4A6741;
+      --sage-light: #7A9E72;
+      --sage-pale:  #EAF0E7;
+      --cream:      #F8F4EE;
+      --gold:       #B8975A;
+      --gold-light: #D4B483;
+      --dark:       #1E2820;
+      --mid:        #4A4A3F;
+      --muted:      #8A8A7A;
+      --white:      #FFFFFF;
+      --radius:     12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 48px;
+      background: rgba(248, 244, 238, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(74,103,65,0.12);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      height: 44px;
+      width: auto;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mid);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--sage); }
+
+    .nav-cta {
+      background: var(--sage);
+      color: var(--white) !important;
+      padding: 10px 22px;
+      border-radius: 100px;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: var(--sage-light) !important; }
+
+    /* ─── BUTTONS ─── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--sage);
+      color: var(--white);
+      padding: 15px 32px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--sage-light); transform: translateY(-1px); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px solid var(--sage);
+      color: var(--sage);
+      padding: 15px 32px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: var(--sage); color: var(--white); }
+
+    /* ─── SECTION SHARED ─── */
+    section { padding: 100px 80px; }
+
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .section-eyebrow::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+    }
+    .section-eyebrow.centered { justify-content: center; }
+    .section-eyebrow.centered::before { display: none; }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--dark);
+      margin-bottom: 20px;
+    }
+    .section-title em { font-style: italic; color: var(--sage); }
+
+    .section-lead {
+      font-size: 1rem;
+      color: var(--mid);
+      line-height: 1.75;
+      max-width: 580px;
+    }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 120px 80px 80px;
+      gap: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 70% at 80% 50%, rgba(122,158,114,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(184,151,90,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-text { position: relative; z-index: 1; }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--dark);
+      margin-bottom: 12px;
+    }
+    .hero-title em { font-style: italic; color: var(--sage); }
+
+    .hero-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 28px;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--mid);
+      line-height: 1.75;
+      max-width: 480px;
+      margin-bottom: 40px;
+    }
+
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 24px 80px rgba(30,40,32,0.1);
+      width: 100%;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .hero-card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--sage-pale);
+      color: var(--sage);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+
+    .hero-card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: var(--dark);
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+
+    .hero-card-creds {
+      font-size: 0.75rem;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      margin-bottom: 24px;
+    }
+
+    .hero-card-divider {
+      height: 1px;
+      background: var(--sage-pale);
+      margin-bottom: 24px;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .hero-stat {
+      text-align: center;
+      padding: 16px;
+      background: var(--cream);
+      border-radius: var(--radius);
+    }
+
+    .hero-stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--sage);
+      line-height: 1;
+      display: block;
+    }
+
+    .hero-stat-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .hero-tag {
+      position: absolute;
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      box-shadow: 0 8px 32px rgba(30,40,32,0.1);
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--mid);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hero-tag-icon { font-size: 1rem; }
+    .hero-tag.tag-top { top: -20px; right: -20px; }
+    .hero-tag.tag-bottom { bottom: -20px; left: -20px; }
+
+    /* ─── ABOUT ─── */
+    #about {
+      background: var(--white);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .about-body {
+      font-size: 0.95rem;
+      color: var(--mid);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .about-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem;
+      font-style: italic;
+      color: var(--sage);
+      line-height: 1.5;
+      padding: 28px 32px;
+      border-left: 3px solid var(--gold);
+      background: var(--sage-pale);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 32px 0;
+    }
+
+    .specialties-inline {
+      margin-top: 24px;
+    }
+
+    .specialties-inline h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 14px;
+    }
+
+    .spec-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .spec-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: var(--mid);
+      line-height: 1.5;
+    }
+
+    .spec-list li::before {
+      content: '•';
+      color: var(--gold);
+      font-size: 1.1rem;
+      line-height: 1.3;
+      flex-shrink: 0;
+    }
+
+    .credentials-box {
+      background: var(--cream);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 28px;
+    }
+
+    .credentials-box h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 16px;
+    }
+
+    .cred-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.86rem;
+      color: var(--mid);
+      padding: 6px 0;
+    }
+
+    .cred-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .lab-callout {
+      background: var(--sage);
+      color: var(--white);
+      border-radius: 20px;
+      padding: 28px 32px;
+    }
+
+    .lab-callout h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .lab-callout ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .lab-callout ul li {
+      display: flex;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .lab-callout ul li::before {
+      content: '🔬';
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    /* ─── PROGRAM OVERVIEW ─── */
+    #program {
+      background: var(--cream);
+    }
+
+    .program-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .program-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+
+    .program-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 32px 28px;
+      border: 1px solid transparent;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .program-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(74,103,65,0.1);
+      border-color: var(--sage-pale);
+    }
+
+    .program-icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .program-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    .program-card-items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .program-card-items li {
+      display: flex;
+      gap: 9px;
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .program-card-items li::before {
+      content: '✓';
+      color: var(--sage);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .program-cta-row {
+      text-align: center;
+    }
+
+    .program-cta-row p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--mid);
+      margin-bottom: 28px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .program-cta-row .actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* ─── PACKAGES ─── */
+    #packages { background: var(--white); }
+
+    .packages-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .packages-header .section-lead { margin: 0 auto; }
+
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .package-card {
+      background: var(--cream);
+      border-radius: 24px;
+      padding: 40px 32px;
+      border: 1.5px solid transparent;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .package-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 64px rgba(30,40,32,0.1);
+    }
+
+    .package-card.featured {
+      border-color: var(--sage);
+      background: var(--dark);
+      color: var(--white);
+    }
+
+    .package-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: var(--white);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 16px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .package-tier {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+
+    .package-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--dark);
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .package-card.featured .package-name { color: var(--white); }
+
+    .package-tagline {
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 28px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    .package-card.featured .package-tagline {
+      color: rgba(255,255,255,0.6);
+      border-bottom-color: rgba(255,255,255,0.12);
+    }
+
+    .pkg-section-label {
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    .package-card.featured .pkg-section-label { color: var(--gold-light); }
+
+    .pkg-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 4px;
+    }
+
+    .pkg-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: 0.82rem;
+      color: var(--mid);
+      line-height: 1.55;
+    }
+    .package-card.featured .pkg-features li { color: rgba(255,255,255,0.75); }
+
+    .pkg-features li::before {
+      content: '✓';
+      color: var(--sage);
+      font-weight: 700;
+      font-size: 0.78rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .package-card.featured .pkg-features li::before { color: var(--gold-light); }
+
+    .package-cta {
+      margin-top: 32px;
+      display: block;
+      text-align: center;
+      padding: 14px 24px;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.2s;
+      background: var(--sage-pale);
+      color: var(--sage);
+    }
+    .package-cta:hover { background: var(--sage); color: var(--white); }
+
+    .package-card.featured .package-cta { background: var(--gold); color: var(--white); }
+    .package-card.featured .package-cta:hover { background: var(--gold-light); }
+
+    /* ─── RESULTS / PHOTOS ─── */
+    #results {
+      background: var(--cream);
+    }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .photo-placeholder {
+      aspect-ratio: 3 / 4;
+      background: var(--white);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 2px dashed rgba(74,103,65,0.2);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .photo-placeholder:hover {
+      border-color: var(--sage);
+      background: var(--sage-pale);
+    }
+
+    .photo-placeholder-icon { font-size: 2rem; }
+
+    .results-note {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* ─── CTA ─── */
+    #cta {
+      background: var(--sage);
+      padding: 100px 80px;
+    }
+
+    .cta-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .cta-left .section-eyebrow { color: var(--gold-light); }
+    .cta-left .section-eyebrow::before { background: var(--gold-light); }
+    .cta-left .section-title { color: var(--white); }
+    .cta-left .section-title em { color: var(--gold-light); }
+    .cta-left .section-lead { color: rgba(255,255,255,0.78); max-width: 420px; }
+
+    .cta-details {
+      margin-top: 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .cta-detail {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .cta-detail-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Contact Form ── */
+    .contact-form-wrap {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 44px 40px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.15);
+    }
+
+    .contact-form-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    .contact-form-sub {
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .form-group.full { grid-column: 1 / -1; }
+
+    .form-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      border: 1.5px solid #E0DDD6;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--dark);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--sage);
+      background: var(--white);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 100px; }
+
+    .form-group select { appearance: none; cursor: pointer; }
+
+    .form-submit {
+      width: 100%;
+      padding: 15px 24px;
+      background: var(--sage);
+      color: var(--white);
+      border: none;
+      border-radius: 100px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 6px;
+    }
+
+    .form-submit:hover { background: var(--sage-light); transform: translateY(-1px); }
+
+    .form-note {
+      text-align: center;
+      font-size: 0.74rem;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--dark);
+      color: rgba(255,255,255,0.5);
+      padding: 48px 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .footer-links { display: flex; gap: 28px; list-style: none; }
+
+    .footer-links a {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-copy { font-size: 0.76rem; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 960px) {
+      nav { padding: 16px 24px; }
+      .nav-links { gap: 18px; }
+      section { padding: 72px 24px; }
+
+      #hero {
+        grid-template-columns: 1fr;
+        padding: 100px 24px 72px;
+        gap: 48px;
+      }
+      .about-grid { grid-template-columns: 1fr; gap: 48px; }
+      .program-grid { grid-template-columns: 1fr; }
+      .packages-grid { grid-template-columns: 1fr; }
+      .photos-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-tag { display: none; }
+      footer { flex-direction: column; text-align: center; }
+      #cta { padding: 72px 24px; }
+      .cta-layout { grid-template-columns: 1fr; gap: 48px; }
+      .contact-form-wrap { padding: 32px 24px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hero-stats { grid-template-columns: 1fr 1fr; }
+      .photos-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">
+      <img src="logo.svg" alt="A to Z Nutrition Virtual Clinic" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#program">My Approach</a></li>
+      <li><a href="#packages">Programs</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#cta" class="nav-cta">Book a Consult</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-text">
+      <div class="hero-eyebrow">Functional Medicine Nutrition</div>
+      <h1 class="hero-title">
+        Root-cause health,<br/>
+        powered by <em>real science</em>
+      </h1>
+      <p class="hero-subtitle">BS-NDTR &nbsp;·&nbsp; MS-HNFM &nbsp;·&nbsp; CPT &nbsp;·&nbsp; Las Vegas, NV</p>
+      <p class="hero-desc">
+        Hello! I'm Anne Apodaca — a dedicated fitness professional with over 20 years of experience in health and wellness. I provide a personalized, root-cause approach to nutrition and fitness, using food as the foundation of healing.
+      </p>
+      <div class="hero-actions">
+        <a href="#packages" class="btn-primary">View Programs</a>
+        <a href="#about" class="btn-secondary">Meet Anne</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-card">
+        <div style="margin-bottom:20px;">
+          <img src="logo.svg" alt="A to Z Nutrition Virtual Clinic" style="width:100%; max-width:280px; height:auto;" />
+        </div>
+        <div class="hero-card-creds">BS-NDTR &nbsp;|&nbsp; MS-HNFM &nbsp;|&nbsp; CPT</div>
+        <div class="hero-card-divider"></div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="hero-stat-num">20+</span>
+            <span class="hero-stat-label">Years Experience</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">3</span>
+            <span class="hero-stat-label">Programs</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">4</span>
+            <span class="hero-stat-label">Lab Panels</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">1:1</span>
+            <span class="hero-stat-label">Personalized Care</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-tag tag-top">
+        <span class="hero-tag-icon">🔬</span>
+        Advanced Lab Testing
+      </div>
+      <div class="hero-tag tag-bottom">
+        <span class="hero-tag-icon">📍</span>
+        Virtual · Las Vegas-based
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-grid">
+      <div>
+        <div class="section-eyebrow">My Journey</div>
+        <h2 class="section-title">From fitness studio<br/>to <em>functional medicine</em></h2>
+
+        <p class="about-body">
+          I'm a dedicated fitness professional with over 20 years of experience in the health and wellness industry. Based in Las Vegas, NV, I've had the privilege of owning and operating my very own fitness studio, where I helped countless individuals achieve their fitness goals and lead healthier lives.
+        </p>
+        <p class="about-body">
+          Over the years, I trained clients and participated in numerous fitness modeling and competition events. As I got older and my clients' needs evolved, I went back to school to earn my second Bachelor's degree in Nutrition. It was during this time that I realized nutrition is everything — <strong>nutrition is medicine.</strong> So I couldn't stop there; I then completed a Master's in Human Nutrition and Functional Medicine.
+        </p>
+
+        <div class="about-quote">
+          "I try to have my clients make their cake and eat it too!"
+        </div>
+
+        <p class="about-body">
+          As a Functional Medicine Nutritionist, I provide a personalized, root-cause approach to health and wellness. I work with clients to uncover and address the underlying factors contributing to their symptoms, using nutrition as a key pillar of healing.
+        </p>
+
+        <div class="specialties-inline">
+          <h4>I specialize in helping clients with:</h4>
+          <ul class="spec-list">
+            <li>Inflammation and chronic pain management</li>
+            <li>Food allergies and sensitivities</li>
+            <li>Gut health and digestion, including detoxification</li>
+            <li>Hormone imbalances, such as PCOS, thyroid, and adrenal issues</li>
+            <li>Weight management and metabolic health</li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <div class="credentials-box">
+          <h4>Credentials</h4>
+          <div class="cred-item"><div class="cred-dot"></div> BS in Nutritional Dietetics &amp; Technology (NDTR)</div>
+          <div class="cred-item"><div class="cred-dot"></div> MS in Human Nutrition &amp; Functional Medicine (HNFM)</div>
+          <div class="cred-item"><div class="cred-dot"></div> Certified Personal Trainer (CPT)</div>
+          <div class="cred-item"><div class="cred-dot"></div> 20+ years in health, fitness &amp; wellness</div>
+          <div class="cred-item"><div class="cred-dot"></div> Former fitness studio owner, San Diego (now Las Vegas, NV)</div>
+          <div class="cred-item"><div class="cred-dot"></div> Fitness modeling &amp; competition experience</div>
+        </div>
+
+        <div class="lab-callout">
+          <h4>🔬 Personalized Lab Testing</h4>
+          <ul>
+            <li>Food sensitivity testing</li>
+            <li>Hormonal panel assessments</li>
+            <li>Gut microbiome analysis</li>
+            <li>Nutritional deficiencies testing</li>
+          </ul>
+          <br/>
+          <p style="font-size:0.84rem; color:rgba(255,255,255,0.75); line-height:1.7;">
+            With these tools, I create science-backed, customized nutrition plans to empower you on your journey to optimal health. Let's get to the root of your health concerns and build a sustainable plan tailored just for YOU!
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAM OVERVIEW -->
+  <section id="program">
+    <div class="program-header">
+      <div class="section-eyebrow centered">My Approach</div>
+      <h2 class="section-title" style="text-align:center;">What my program <em>entails</em></h2>
+      <p class="section-lead" style="margin: 0 auto; text-align:center;">
+        What sets my approach apart is my belief in balance. Finding a sustainable, enjoyable way to incorporate healthy eating into your lifestyle without feeling deprived — so you can make a change that actually lasts.
+      </p>
+    </div>
+
+    <div class="program-grid">
+      <div class="program-card">
+        <span class="program-icon">📋</span>
+        <div class="program-card-title">Comprehensive Nutritional Assessment</div>
+        <ul class="program-card-items">
+          <li>A thorough evaluation of your current diet, lifestyle, and health goals</li>
+          <li>Personalized meal plans tailored to your specific needs, preferences, and dietary restrictions</li>
+        </ul>
+      </div>
+
+      <div class="program-card">
+        <span class="program-icon">💪</span>
+        <div class="program-card-title">Custom Fitness Plans</div>
+        <ul class="program-card-items">
+          <li>Workout routines designed to complement your nutritional goals and fit seamlessly into your daily life</li>
+          <li>Adaptations for all fitness levels, from beginners to advanced athletes</li>
+        </ul>
+      </div>
+
+      <div class="program-card">
+        <span class="program-icon">🤝</span>
+        <div class="program-card-title">Ongoing Support &amp; Accountability</div>
+        <ul class="program-card-items">
+          <li>Regular check-ins to monitor progress, make adjustments, and provide motivation</li>
+          <li>Access to a supportive community of like-minded individuals</li>
+        </ul>
+      </div>
+
+      <div class="program-card">
+        <span class="program-icon">📚</span>
+        <div class="program-card-title">Educational Resources</div>
+        <ul class="program-card-items">
+          <li>Information on the role of nutrition in managing inflammation, food allergies, and pain</li>
+          <li>Tips and recipes to help you make healthier choices without sacrificing flavor</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="program-cta-row">
+      <p>"Together, we can make nutrition a simple, effective part of your daily routine. Let's harness the power of food as medicine."</p>
+      <div class="actions">
+        <a href="#packages" class="btn-primary">See All Programs</a>
+        <a href="#cta" class="btn-secondary">Book a Free Call</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PACKAGES -->
+  <section id="packages">
+    <div class="packages-header">
+      <div class="section-eyebrow centered">Programs</div>
+      <h2 class="section-title" style="text-align:center;">Choose your <em>path to wellness</em></h2>
+      <p class="section-lead">
+        Every program includes a 60-minute initial consultation and bi-weekly check-ins. Select the level of support that fits your goals.
+      </p>
+    </div>
+
+    <div class="packages-grid">
+
+      <!-- Nourish & Thrive -->
+      <div class="package-card">
+        <div class="package-tier">Foundation</div>
+        <div class="package-name">Nourish &amp;<br/>Thrive</div>
+        <p class="package-tagline">For clients focused solely on personalized nutrition with accountability and fitness guidance (no labs).</p>
+
+        <div class="pkg-section-label">Nutrition</div>
+        <ul class="pkg-features">
+          <li>Initial consultation (60 minutes)</li>
+          <li>Bi-weekly nutrition consults (2 × 30 minutes)</li>
+          <li>Customized meal plans with recipes and grocery lists</li>
+        </ul>
+
+        <div class="pkg-section-label">Fitness Program Design</div>
+        <ul class="pkg-features">
+          <li>A 4-week self-guided fitness plan tailored to your goals</li>
+          <li>Weekly email or app check-ins for accountability</li>
+          <li>Step count and daily habit tracking to support your progress</li>
+        </ul>
+
+        <a href="#cta" class="package-cta">Get Started</a>
+      </div>
+
+      <!-- Empowerment – featured -->
+      <div class="package-card featured">
+        <div class="package-badge">Most Popular</div>
+        <div class="package-tier">Advanced</div>
+        <div class="package-name">Empowerment<br/>Package</div>
+        <p class="package-tagline">For clients focused on labs, personalized nutrition, and a custom fitness program for accountability.</p>
+
+        <div class="pkg-section-label">Nutrition</div>
+        <ul class="pkg-features">
+          <li>Initial consultation (60 minutes)</li>
+          <li>Bi-weekly nutrition consults (2 × 30 minutes)</li>
+          <li>Step-by-step personalized meal plans</li>
+        </ul>
+
+        <div class="pkg-section-label">Functional Medicine Labs</div>
+        <ul class="pkg-features">
+          <li>Lab testing for food sensitivities, gut health, and more</li>
+          <li>A tailored action plan based on lab results</li>
+        </ul>
+
+        <div class="pkg-section-label">Fitness Program Design</div>
+        <ul class="pkg-features">
+          <li>A 4-week self-guided fitness plan (home or gym-based)</li>
+          <li>Weekly check-ins via email or app for accountability and program adjustments</li>
+          <li>Daily step/activity goals to keep you on track</li>
+        </ul>
+
+        <a href="#cta" class="package-cta">Get Started</a>
+      </div>
+
+      <!-- Total Wellness -->
+      <div class="package-card">
+        <div class="package-tier">Premium</div>
+        <div class="package-name">Total Wellness<br/>Package</div>
+        <p class="package-tagline">For clients seeking an all-inclusive plan with labs, personalized nutrition, and guided fitness.</p>
+
+        <div class="pkg-section-label">Nutrition</div>
+        <ul class="pkg-features">
+          <li>Initial consultation (60 minutes)</li>
+          <li>Bi-weekly nutrition consults (2 × 30 minutes)</li>
+          <li>Customized meal plans tailored to your unique needs</li>
+        </ul>
+
+        <div class="pkg-section-label">Functional Medicine Labs</div>
+        <ul class="pkg-features">
+          <li>Comprehensive lab testing (food sensitivities, gut health, hormone balance, nutritional deficiencies)</li>
+          <li>Supplement recommendations based on lab results</li>
+        </ul>
+
+        <div class="pkg-section-label">Fitness (Live 1-on-1)</div>
+        <ul class="pkg-features">
+          <li>4 one-on-one virtual personal training sessions per month (45 minutes each)</li>
+          <li>Additional structured workouts to follow between sessions</li>
+        </ul>
+
+        <a href="#cta" class="package-cta">Get Started</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- RESULTS / PROGRESS PHOTOS -->
+  <section id="results">
+    <div class="results-header">
+      <div class="section-eyebrow centered">Real Results</div>
+      <h2 class="section-title" style="text-align:center;">Client <em>transformations</em></h2>
+      <p class="section-lead" style="margin: 0 auto; text-align:center;">
+        Real people, real progress. These are clients who committed to the process and made nutrition their foundation for change.
+      </p>
+    </div>
+
+    <div class="photos-grid">
+      <div class="photo-placeholder">
+        <span class="photo-placeholder-icon">📸</span>
+        Photo Coming Soon
+      </div>
+      <div class="photo-placeholder">
+        <span class="photo-placeholder-icon">📸</span>
+        Photo Coming Soon
+      </div>
+      <div class="photo-placeholder">
+        <span class="photo-placeholder-icon">📸</span>
+        Photo Coming Soon
+      </div>
+      <div class="photo-placeholder">
+        <span class="photo-placeholder-icon">📸</span>
+        Photo Coming Soon
+      </div>
+      <div class="photo-placeholder">
+        <span class="photo-placeholder-icon">📸</span>
+        Photo Coming Soon
+      </div>
+      <div class="photo-placeholder">
+        <span class="photo-placeholder-icon">📸</span>
+        Photo Coming Soon
+      </div>
+      <div class="photo-placeholder">
+        <span class="photo-placeholder-icon">📸</span>
+        Photo Coming Soon
+      </div>
+      <div class="photo-placeholder">
+        <span class="photo-placeholder-icon">📸</span>
+        Photo Coming Soon
+      </div>
+    </div>
+
+    <p class="results-note">Progress photos will be added here — 8 slots ready to go.</p>
+  </section>
+
+  <!-- CONTACT / CTA -->
+  <section id="cta">
+    <div class="cta-layout">
+
+      <!-- Left: messaging -->
+      <div class="cta-left">
+        <div class="section-eyebrow">Let's Connect</div>
+        <h2 class="section-title">Ready to get to the<br/><em>root of it?</em></h2>
+        <p class="section-lead">
+          Take the first step toward a healthier, more balanced life. Send Anne a message and she'll reach out to set up your free discovery call.
+        </p>
+        <div class="cta-details">
+          <div class="cta-detail">
+            <div class="cta-detail-icon">📍</div>
+            Virtual clinic · Las Vegas, NV
+          </div>
+          <div class="cta-detail">
+            <div class="cta-detail-icon">📅</div>
+            Free 15-minute discovery call to start
+          </div>
+          <div class="cta-detail">
+            <div class="cta-detail-icon">🔬</div>
+            Advanced lab testing available with all plans
+          </div>
+          <div class="cta-detail">
+            <div class="cta-detail-icon">💬</div>
+            @atoznutrition.virtualclinic
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Netlify form -->
+      <div class="contact-form-wrap">
+        <div class="contact-form-title">Send Anne a Message</div>
+        <div class="contact-form-sub">She typically responds within 24 hours.</div>
+
+        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <!-- Netlify hidden fields -->
+          <input type="hidden" name="form-name" value="contact" />
+          <p style="display:none;">
+            <label>Don't fill this out: <input name="bot-field" /></label>
+          </p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="first-name">First Name *</label>
+              <input type="text" id="first-name" name="first-name" placeholder="Jane" required />
+            </div>
+            <div class="form-group">
+              <label for="last-name">Last Name *</label>
+              <input type="text" id="last-name" name="last-name" placeholder="Smith" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" name="email" placeholder="jane@email.com" required />
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" name="phone" placeholder="(702) 555-0100" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="program">Interested In</label>
+            <select id="program" name="program">
+              <option value="" disabled selected>Select a program…</option>
+              <option value="nourish-thrive">Nourish &amp; Thrive (Nutrition + Fitness)</option>
+              <option value="empowerment">Empowerment Package (Labs + Nutrition + Fitness)</option>
+              <option value="total-wellness">Total Wellness Package (All-Inclusive)</option>
+              <option value="not-sure">Not sure yet — I'd like guidance</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message">What are you hoping to work on? *</label>
+            <textarea id="message" name="message" placeholder="Tell Anne a bit about your health goals or what's been going on…" required></textarea>
+          </div>
+
+          <button type="submit" class="form-submit">Send Message →</button>
+          <p class="form-note">Your info is never shared. No spam, ever.</p>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">
+      <img src="logo.svg" alt="A to Z Nutrition" style="height:36px; width:auto; filter:brightness(0) invert(1);" />
+    </div>
+    <ul class="footer-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#program">My Approach</a></li>
+      <li><a href="#packages">Programs</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#cta">Contact</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 Anne Apodaca · @atoznutrition.virtualclinic · Las Vegas, NV</div>
+  </footer>
+
+</body>
+</html>

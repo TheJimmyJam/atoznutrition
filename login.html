@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In | A to Z Nutrition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sage:       #4A6741;
+      --sage-light: #7A9E72;
+      --sage-pale:  #EAF0E7;
+      --cream:      #F8F4EE;
+      --gold:       #B8975A;
+      --gold-light: #D4B483;
+      --dark:       #1E2820;
+      --mid:        #4A4A3F;
+      --muted:      #8A8A7A;
+      --white:      #FFFFFF;
+      --error:      #C0392B;
+      --success:    #27AE60;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* ── Left panel ── */
+    .panel-left {
+      background: var(--sage);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel-left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 80%, rgba(184,151,90,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .panel-logo {
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-logo img {
+      height: 48px;
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    .panel-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--white);
+      line-height: 1.4;
+      margin-bottom: 24px;
+    }
+
+    .panel-quote em {
+      color: var(--gold-light);
+      font-style: normal;
+    }
+
+    .panel-desc {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.7;
+      max-width: 360px;
+    }
+
+    .panel-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 32px;
+    }
+
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 100px;
+      padding: 7px 14px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .panel-footer {
+      position: relative;
+      z-index: 1;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ── Right panel (form) ── */
+    .panel-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+      background: var(--white);
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .auth-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    .auth-sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    /* Tabs */
+    .auth-tabs {
+      display: flex;
+      border-bottom: 2px solid #EEEBE4;
+      margin-bottom: 28px;
+      gap: 0;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 0;
+      background: none;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .tab-btn.active {
+      color: var(--sage);
+      border-bottom-color: var(--sage);
+    }
+
+    /* Mode switcher (password / magic link) */
+    .mode-switch {
+      display: flex;
+      background: var(--cream);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 24px;
+    }
+
+    .mode-btn {
+      flex: 1;
+      padding: 9px 12px;
+      background: none;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .mode-btn.active {
+      background: var(--white);
+      color: var(--dark);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Form fields */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
+
+    .form-group input {
+      border: 1.5px solid #E0DDD6;
+      border-radius: 10px;
+      padding: 13px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: var(--dark);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      width: 100%;
+    }
+
+    .form-group input:focus {
+      border-color: var(--sage);
+      background: var(--white);
+    }
+
+    .forgot-link {
+      text-align: right;
+      margin-top: -10px;
+      margin-bottom: 20px;
+    }
+
+    .forgot-link a {
+      font-size: 0.76rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .forgot-link a:hover { color: var(--sage); }
+
+    /* Submit */
+    .btn-submit {
+      width: 100%;
+      padding: 14px 24px;
+      background: var(--sage);
+      color: var(--white);
+      border: none;
+      border-radius: 100px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-submit:hover:not(:disabled) { background: var(--sage-light); transform: translateY(-1px); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #E0DDD6;
+    }
+
+    /* Alert */
+    .alert {
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.83rem;
+      margin-bottom: 18px;
+      display: none;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .alert.show { display: flex; }
+    .alert.error { background: #FDEDEC; color: var(--error); border: 1px solid #F1948A; }
+    .alert.success { background: #EAFAF1; color: var(--success); border: 1px solid #82E0AA; }
+    .alert.info { background: var(--sage-pale); color: var(--sage); border: 1px solid #A9C9A4; }
+
+    /* Magic link sent state */
+    .magic-sent {
+      text-align: center;
+      padding: 24px 0;
+      display: none;
+    }
+
+    .magic-sent.show { display: block; }
+
+    .magic-sent-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .magic-sent h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .magic-sent p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .back-link {
+      font-size: 0.8rem;
+      color: var(--sage);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      text-decoration: underline;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    .btn-submit.loading .spinner { display: block; }
+    .btn-submit.loading .btn-label { display: none; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Back to site */
+    .back-to-site {
+      margin-top: 28px;
+      text-align: center;
+    }
+
+    .back-to-site a {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.2s;
+    }
+
+    .back-to-site a:hover { color: var(--sage); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { grid-template-columns: 1fr; }
+      .panel-left { display: none; }
+      .panel-right { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Left branding panel -->
+  <div class="panel-left">
+    <div class="panel-logo">
+      <img src="logo.svg" alt="A to Z Nutrition Virtual Clinic" />
+    </div>
+
+    <div class="panel-content">
+      <p class="panel-quote">
+        "Let's get to the <em>root</em> of your health concerns."
+      </p>
+      <p class="panel-desc">
+        Welcome back. Your personalized wellness portal gives you access to your plans, lab results, appointments, and direct communication with Anne.
+      </p>
+      <div class="panel-pills">
+        <div class="pill">🥗 Meal Plans</div>
+        <div class="pill">🔬 Lab Results</div>
+        <div class="pill">📅 Appointments</div>
+        <div class="pill">💬 Messages</div>
+        <div class="pill">💪 Fitness Plans</div>
+      </div>
+    </div>
+
+    <div class="panel-footer">
+      © 2026 A to Z Nutrition Virtual Clinic · Las Vegas, NV
+    </div>
+  </div>
+
+  <!-- Right form panel -->
+  <div class="panel-right">
+    <div class="auth-box">
+
+      <div class="auth-title">Welcome back</div>
+      <div class="auth-sub">Sign in to your wellness portal</div>
+
+      <!-- Sign In / Sign Up tabs -->
+      <div class="auth-tabs">
+        <button class="tab-btn active" onclick="switchTab('signin')">Sign In</button>
+        <button class="tab-btn" onclick="switchTab('signup')">Create Account</button>
+      </div>
+
+      <!-- Alert -->
+      <div class="alert" id="alert"></div>
+
+      <!-- Magic link sent confirmation -->
+      <div class="magic-sent" id="magicSent">
+        <div class="magic-sent-icon">📬</div>
+        <h3>Check your email</h3>
+        <p>We sent a magic link to <strong id="magicEmail"></strong>. Click it to sign in instantly — no password needed.</p>
+        <button class="back-link" onclick="hideMagicSent()">← Try a different method</button>
+      </div>
+
+      <!-- Form -->
+      <div id="authForm">
+
+        <!-- Password / Magic Link mode switcher -->
+        <div class="mode-switch">
+          <button class="mode-btn active" id="modePassword" onclick="setMode('password')">🔒 Password</button>
+          <button class="mode-btn" id="modeMagic" onclick="setMode('magic')">✨ Magic Link</button>
+        </div>
+
+        <form id="form" onsubmit="handleSubmit(event)">
+
+          <!-- Sign up only: name -->
+          <div class="form-group" id="nameGroup" style="display:none;">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" placeholder="Jane Smith" autocomplete="name" />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="you@email.com" required autocomplete="email" />
+          </div>
+
+          <!-- Password field (hidden in magic link mode) -->
+          <div class="form-group" id="passwordGroup">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" />
+          </div>
+
+          <div class="forgot-link" id="forgotLink">
+            <a href="#" onclick="forgotPassword(event)">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <div class="spinner"></div>
+            <span class="btn-label" id="submitLabel">Sign In</span>
+          </button>
+
+        </form>
+
+      </div>
+
+      <div class="back-to-site">
+        <a href="index.html">← Back to website</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL  = 'https://fpimnkzboivwqbrqrufh.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwaW1ua3pib2l2d3FicnFydWZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5MTU2NTcsImV4cCI6MjA5MzQ5MTY1N30.UtfFtpFDpWApRS8mPiOeb2DDO_i66IU736iVc2xjJIk';
+
+    const { createClient } = supabase;
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    let currentTab = 'signin';   // 'signin' | 'signup'
+    let currentMode = 'password'; // 'password' | 'magic'
+
+    // ── Check if already logged in ──
+    (async () => {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) redirectToDashboard(session);
+    })();
+
+    // ── Handle magic link in URL (on page load) ──
+    sb.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        redirectToDashboard(session);
+      }
+    });
+
+    async function redirectToDashboard(session) {
+      try {
+        const { data: profile } = await sb
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        const role = profile?.role || 'client';
+        window.location.href = role === 'admin' ? '/dashboard.html?view=admin' : '/dashboard.html';
+      } catch {
+        window.location.href = '/dashboard.html';
+      }
+    }
+
+    // ── Tab switching ──
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach((b, i) => {
+        b.classList.toggle('active', (i === 0 && tab === 'signin') || (i === 1 && tab === 'signup'));
+      });
+
+      document.getElementById('nameGroup').style.display  = tab === 'signup' ? 'flex' : 'none';
+      document.getElementById('forgotLink').style.display = tab === 'signin' ? 'block' : 'none';
+
+      if (tab === 'signup') {
+        document.getElementById('password').placeholder    = 'Create a password (8+ chars)';
+        document.getElementById('password').autocomplete  = 'new-password';
+      } else {
+        document.getElementById('password').placeholder   = '••••••••';
+        document.getElementById('password').autocomplete  = 'current-password';
+      }
+
+      updateSubmitLabel();
+      clearAlert();
+    }
+
+    // ── Mode switching (password / magic link) ──
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('modePassword').classList.toggle('active', mode === 'password');
+      document.getElementById('modeMagic').classList.toggle('active', mode === 'magic');
+      document.getElementById('passwordGroup').style.display = mode === 'password' ? 'flex' : 'none';
+      document.getElementById('forgotLink').style.display    = mode === 'password' && currentTab === 'signin' ? 'block' : 'none';
+      updateSubmitLabel();
+      clearAlert();
+    }
+
+    function updateSubmitLabel() {
+      const label = document.getElementById('submitLabel');
+      if (currentMode === 'magic') {
+        label.textContent = 'Send Magic Link →';
+      } else if (currentTab === 'signup') {
+        label.textContent = 'Create Account →';
+      } else {
+        label.textContent = 'Sign In →';
+      }
+    }
+
+    // ── Form submission ──
+    async function handleSubmit(e) {
+      e.preventDefault();
+      clearAlert();
+      setLoading(true);
+
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const fullName = document.getElementById('fullName').value.trim();
+
+      try {
+        if (currentMode === 'magic') {
+          const { error } = await sb.auth.signInWithOtp({
+            email,
+            options: { emailRedirectTo: window.location.origin + '/dashboard.html' }
+          });
+          if (error) throw error;
+          showMagicSent(email);
+
+        } else if (currentTab === 'signup') {
+          const { error } = await sb.auth.signUp({
+            email,
+            password,
+            options: {
+              data: { full_name: fullName, role: 'client' },
+              emailRedirectTo: window.location.origin + '/dashboard.html'
+            }
+          });
+          if (error) throw error;
+          showAlert('Account created! Check your email to confirm your address.', 'success');
+
+        } else {
+          const { data, error } = await sb.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+          await redirectToDashboard(data.session);
+        }
+      } catch (err) {
+        showAlert(friendlyError(err.message), 'error');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // ── Forgot password ──
+    async function forgotPassword(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      if (!email) { showAlert('Enter your email address above first.', 'error'); return; }
+
+      setLoading(true);
+      const { error } = await sb.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/reset-password.html'
+      });
+      setLoading(false);
+
+      if (error) {
+        showAlert(friendlyError(error.message), 'error');
+      } else {
+        showAlert('Password reset email sent — check your inbox.', 'success');
+      }
+    }
+
+    // ── UI helpers ──
+    function setLoading(loading) {
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = loading;
+      btn.classList.toggle('loading', loading);
+    }
+
+    function showAlert(msg, type = 'error') {
+      const el = document.getElementById('alert');
+      el.textContent = msg;
+      el.className = `alert ${type} show`;
+    }
+
+    function clearAlert() {
+      const el = document.getElementById('alert');
+      el.className = 'alert';
+    }
+
+    function showMagicSent(email) {
+      document.getElementById('magicEmail').textContent = email;
+      document.getElementById('magicSent').classList.add('show');
+      document.getElementById('authForm').style.display = 'none';
+    }
+
+    function hideMagicSent() {
+      document.getElementById('magicSent').classList.remove('show');
+      document.getElementById('authForm').style.display = 'block';
+    }
+
+    function friendlyError(msg) {
+      if (msg.includes('Invalid login'))     return 'Incorrect email or password.';
+      if (msg.includes('Email not confirmed')) return 'Please confirm your email before signing in.';
+      if (msg.includes('already registered')) return 'An account with this email already exists. Try signing in.';
+      if (msg.includes('Password should'))   return 'Password must be at least 6 characters.';
+      if (msg.includes('rate limit'))        return 'Too many attempts — please wait a moment and try again.';
+      return msg;
+    }
+  </script>
+</body>
+</html>
