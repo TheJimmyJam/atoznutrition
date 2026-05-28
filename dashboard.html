@@ -244,7 +244,7 @@
       .content{padding:16px}
       .top-bar{padding:12px 16px}
     }
-  </style>
+  svg.ico{width:1em;height:1em;display:inline-block;vertical-align:-0.14em;flex-shrink:0}</style>
 </head>
 <body>
 <div id="app">
@@ -298,29 +298,29 @@ function renderApp() {
   const adminNav = `
     <p class="sb-section-label">Main</p>
     <ul class="sb-nav">
-      <li><a onclick="navigate('overview')" data-section="overview"><span class="icon">📊</span><span class="label">Overview</span></a></li>
-      <li><a onclick="navigate('clients')" data-section="clients"><span class="icon">👥</span><span class="label">Clients</span></a></li>
-      <li><a onclick="navigate('content')" data-section="content"><span class="icon">📁</span><span class="label">Content</span></a></li>
-      <li><a onclick="navigate('appointments')" data-section="appointments"><span class="icon">📅</span><span class="label">Appointments</span></a></li>
+      <li><a onclick="navigate('overview')" data-section="overview"><span class="icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="9"/></svg></span><span class="label">Overview</span></a></li>
+      <li><a onclick="navigate('clients')" data-section="clients"><span class="icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="label">Clients</span></a></li>
+      <li><a onclick="navigate('content')" data-section="content"><span class="icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span><span class="label">Content</span></a></li>
+      <li><a onclick="navigate('appointments')" data-section="appointments"><span class="icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><span class="label">Appointments</span></a></li>
     </ul>
     <p class="sb-section-label">Communicate</p>
     <ul class="sb-nav">
-      <li><a onclick="navigate('messages')" data-section="messages"><span class="icon">💬</span><span class="label">Messages</span><span class="sb-badge" id="sb-msg-badge" style="display:none">0</span></a></li>
-      <li><a onclick="navigate('inquiries')" data-section="inquiries"><span class="icon">📬</span><span class="label">Inquiries</span></a></li>
+      <li><a onclick="navigate('messages')" data-section="messages"><span class="icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="label">Messages</span><span class="sb-badge" id="sb-msg-badge" style="display:none">0</span></a></li>
+      <li><a onclick="navigate('inquiries')" data-section="inquiries"><span class="icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg></span><span class="label">Inquiries</span></a></li>
     </ul>
     <p class="sb-section-label">Billing</p>
     <ul class="sb-nav">
-      <li><a onclick="navigate('invoices')" data-section="invoices"><span class="icon">💰</span><span class="label">Invoices</span></a></li>
+      <li><a onclick="navigate('invoices')" data-section="invoices"><span class="icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span><span class="label">Invoices</span></a></li>
     </ul>`;
 
   const clientNav = `
     <ul class="sb-nav" style="margin-top:16px">
-      <li><a onclick="navigate('home')" data-section="home"><span class="icon">🏠</span><span class="label">Home</span></a></li>
-      <li><a onclick="navigate('meal-plan')" data-section="meal-plan"><span class="icon">🥗</span><span class="label">Meal Plan</span></a></li>
-      <li><a onclick="navigate('fitness')" data-section="fitness"><span class="icon">💪</span><span class="label">Fitness Plan</span></a></li>
-      <li><a onclick="navigate('labs')" data-section="labs"><span class="icon">🔬</span><span class="label">Lab Results</span></a></li>
-      <li><a onclick="navigate('my-appointments')" data-section="my-appointments"><span class="icon">📅</span><span class="label">Appointments</span></a></li>
-      <li><a onclick="navigate('messages')" data-section="messages"><span class="icon">💬</span><span class="label">Messages</span><span class="sb-badge" id="sb-msg-badge" style="display:none">0</span></a></li>
+      <li><a onclick="navigate('home')" data-section="home"><span class="icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span><span class="label">Home</span></a></li>
+      <li><a onclick="navigate('meal-plan')" data-section="meal-plan"><span class="icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7c0-2.5 1.8-4.5 4.5-4.5C16.5 5 14.7 7 12 7z"/><path d="M12 7C9.2 7 4.5 8 4.5 14c0 4 2.8 8 4.8 8 1 0 1.7-.8 2.7-.8s1.7.8 2.7.8c2 0 4.8-4 4.8-8 0-6-4.7-7-7.5-7z"/></svg></span><span class="label">Meal Plan</span></a></li>
+      <li><a onclick="navigate('fitness')" data-section="fitness"><span class="icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span><span class="label">Fitness Plan</span></a></li>
+      <li><a onclick="navigate('labs')" data-section="labs"><span class="icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6.2L4.2 17A2 2 0 0 0 6 20h12a2 2 0 0 0 1.8-3L15 8.2V2"/><line x1="8" y1="2" x2="16" y2="2"/><line x1="7" y1="15" x2="17" y2="15"/></svg></span><span class="label">Lab Results</span></a></li>
+      <li><a onclick="navigate('my-appointments')" data-section="my-appointments"><span class="icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><span class="label">Appointments</span></a></li>
+      <li><a onclick="navigate('messages')" data-section="messages"><span class="icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="label">Messages</span><span class="sb-badge" id="sb-msg-badge" style="display:none">0</span></a></li>
     </ul>`;
 
   document.getElementById('app').innerHTML = `
@@ -408,10 +408,10 @@ async function renderOverview() {
 
   setContent(`
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-val">${clientCount||0}</div><div class="stat-label">Active Clients</div></div>
-      <div class="stat-card"><div class="stat-icon">📁</div><div class="stat-val">${docCount||0}</div><div class="stat-label">Documents Shared</div></div>
-      <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-val">${unread||0}</div><div class="stat-label">Unread Messages</div></div>
-      <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-val">${aptCount||0}</div><div class="stat-label">Upcoming Sessions</div></div>
+      <div class="stat-card"><div class="stat-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="stat-val">${clientCount||0}</div><div class="stat-label">Active Clients</div></div>
+      <div class="stat-card"><div class="stat-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div><div class="stat-val">${docCount||0}</div><div class="stat-label">Documents Shared</div></div>
+      <div class="stat-card"><div class="stat-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="stat-val">${unread||0}</div><div class="stat-label">Unread Messages</div></div>
+      <div class="stat-card"><div class="stat-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="stat-val">${aptCount||0}</div><div class="stat-label">Upcoming Sessions</div></div>
     </div>
     <div class="grid-2">
       <div class="card">
@@ -477,7 +477,7 @@ async function renderClients() {
                     <button class="btn btn-gold btn-sm" onclick="showInvoiceModal('${c.id}','${escape(c.full_name||c.email)}')">Invoice</button>
                   </div>
                 </td>
-              </tr>`).join('') : `<tr><td colspan="4"><div class="empty"><div class="empty-icon">👥</div><h3>No clients yet</h3><p>Invite your first client to get started.</p></div></td></tr>`}
+              </tr>`).join('') : `<tr><td colspan="4"><div class="empty"><div class="empty-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>No clients yet</h3><p>Invite your first client to get started.</p></div></td></tr>`}
           </tbody>
         </table>
       </div>
@@ -508,9 +508,9 @@ async function renderContent() {
           <div class="form-group">
             <label>Document Type</label>
             <select id="uploadType">
-              <option value="meal_plan">🥗 Meal Plan</option>
-              <option value="fitness_plan">💪 Fitness Plan</option>
-              <option value="lab_result">🔬 Lab Result</option>
+              <option value="meal_plan">Meal Plan</option>
+              <option value="fitness_plan">Fitness Plan</option>
+              <option value="lab_result">Lab Result</option>
             </select>
           </div>
           <div class="form-group">
@@ -522,7 +522,7 @@ async function renderContent() {
             <textarea id="uploadNotes" placeholder="Any context or instructions for the client…"></textarea>
           </div>
           <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-            <div class="upload-zone-icon">📄</div>
+            <div class="upload-zone-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
             <p><strong>Click to select PDF</strong> or drag & drop here</p>
             <p id="uploadFileName" style="margin-top:8px;font-size:.75rem;color:var(--sage)"></p>
           </div>
@@ -650,7 +650,7 @@ async function renderAppointments() {
                     <button class="btn btn-ghost btn-sm" onclick="markAptComplete('${a.id}')">✓ Done</button>
                   </div>
                 </td>
-              </tr>`).join('') : `<tr><td colspan="6"><div class="empty"><div class="empty-icon">📅</div><h3>No appointments yet</h3></div></td></tr>`}
+              </tr>`).join('') : `<tr><td colspan="6"><div class="empty"><div class="empty-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><h3>No appointments yet</h3></div></td></tr>`}
           </tbody>
         </table>
       </div>
@@ -677,7 +677,7 @@ async function renderInquiries() {
     const contactForm = forms.find(f=>f.name==='contact');
 
     if(!contactForm) {
-      setContent(`<div class="empty"><div class="empty-icon">📬</div><h3>No submissions yet</h3><p>Contact form submissions from the website will appear here once people start reaching out.</p></div>`);
+      setContent(`<div class="empty"><div class="empty-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg></div><h3>No submissions yet</h3><p>Contact form submissions from the website will appear here once people start reaching out.</p></div>`);
       return;
     }
 
@@ -708,7 +708,7 @@ async function renderInquiries() {
         </div>
       </div>`);
   } catch(e) {
-    setContent(`<div class="empty"><div class="empty-icon">📬</div><h3>Could not load inquiries</h3><p>${e.message}</p></div>`);
+    setContent(`<div class="empty"><div class="empty-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg></div><h3>Could not load inquiries</h3><p>${e.message}</p></div>`);
   }
 }
 
@@ -724,7 +724,7 @@ async function renderInvoices() {
   setContent(`
     <div class="card" style="margin-bottom:20px;background:var(--yellow-l);border-color:#F0D060">
       <div style="display:flex;gap:12px;align-items:flex-start">
-        <span style="font-size:1.4rem">⚡</span>
+        <span style="font-size:1.4rem"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
         <div>
           <strong style="font-size:.85rem">Stripe not yet connected</strong>
           <p style="font-size:.8rem;color:var(--mid);margin-top:2px">Add your Stripe keys to enable online payment links, automatic receipts, and payment tracking.</p>
@@ -749,7 +749,7 @@ async function renderInvoices() {
                     ${inv.status==='sent'?`<button class="btn btn-gold btn-sm" onclick="markInvoicePaid('${inv.id}')">Mark Paid</button>`:''}
                   </div>
                 </td>
-              </tr>`).join('') : `<tr><td colspan="6"><div class="empty"><div class="empty-icon">💰</div><h3>No invoices yet</h3></div></td></tr>`}
+              </tr>`).join('') : `<tr><td colspan="6"><div class="empty"><div class="empty-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>No invoices yet</h3></div></td></tr>`}
           </tbody>
         </table>
       </div>
@@ -771,7 +771,7 @@ async function renderMessages() {
       <div id="threadList"><div class="loading-screen" style="height:100px"><div class="spinner dark"></div></div></div>
     </div>
     <div class="msg-chat" id="msgChat">
-      <div class="msg-empty"><div class="msg-empty-icon">💬</div><p>Select a conversation</p></div>
+      <div class="msg-empty"><div class="msg-empty-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><p>Select a conversation</p></div>
     </div>
   </div>`);
 
@@ -844,7 +844,7 @@ async function loadChat(recipientId) {
 
   const body = document.getElementById('chatBody');
   if(!body) return;
-  body.innerHTML = msgs?.length ? msgs.map(m=>msgBubble(m)).join('') : `<div class="msg-empty"><div class="msg-empty-icon">👋</div><p>Send a message to start the conversation</p></div>`;
+  body.innerHTML = msgs?.length ? msgs.map(m=>msgBubble(m)).join('') : `<div class="msg-empty"><div class="msg-empty-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div><p>Send a message to start the conversation</p></div>`;
   body.scrollTop = body.scrollHeight;
 }
 
@@ -895,9 +895,9 @@ async function renderClientHome() {
 
   setContent(`
     <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
-      <div class="stat-card"><div class="stat-icon">📁</div><div class="stat-val">${docs?.length||0}</div><div class="stat-label">Documents</div></div>
-      <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-val">${next?'1':'0'}</div><div class="stat-label">Upcoming Session</div></div>
-      <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-val">${unread||0}</div><div class="stat-label">New Messages</div></div>
+      <div class="stat-card"><div class="stat-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div><div class="stat-val">${docs?.length||0}</div><div class="stat-label">Documents</div></div>
+      <div class="stat-card"><div class="stat-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="stat-val">${next?'1':'0'}</div><div class="stat-label">Upcoming Session</div></div>
+      <div class="stat-card"><div class="stat-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="stat-val">${unread||0}</div><div class="stat-label">New Messages</div></div>
     </div>
 
     <div class="grid-2">
@@ -921,10 +921,10 @@ async function renderClientHome() {
         <div class="card">
           <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:14px">Quick Links</h3>
           <div style="display:flex;flex-direction:column;gap:8px">
-            <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('meal-plan')">🥗 View My Meal Plan</button>
-            <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('fitness')">💪 View My Fitness Plan</button>
-            <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('labs')">🔬 View Lab Results</button>
-            <button class="btn btn-ghost" style="justify-content:flex-start" onclick="navigate('messages')">💬 Message Anne</button>
+            <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('meal-plan')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7c0-2.5 1.8-4.5 4.5-4.5C16.5 5 14.7 7 12 7z"/><path d="M12 7C9.2 7 4.5 8 4.5 14c0 4 2.8 8 4.8 8 1 0 1.7-.8 2.7-.8s1.7.8 2.7.8c2 0 4.8-4 4.8-8 0-6-4.7-7-7.5-7z"/></svg> View My Meal Plan</button>
+            <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('fitness')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> View My Fitness Plan</button>
+            <button class="btn btn-secondary" style="justify-content:flex-start" onclick="navigate('labs')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6.2L4.2 17A2 2 0 0 0 6 20h12a2 2 0 0 0 1.8-3L15 8.2V2"/><line x1="8" y1="2" x2="16" y2="2"/><line x1="7" y1="15" x2="17" y2="15"/></svg> View Lab Results</button>
+            <button class="btn btn-ghost" style="justify-content:flex-start" onclick="navigate('messages')"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Message Anne</button>
           </div>
         </div>
       </div>
@@ -978,7 +978,7 @@ async function renderClientAppointments() {
   setContent(`
     <div class="card" style="margin-bottom:20px;background:var(--sage-p);border-color:var(--sage-l)">
       <div style="display:flex;gap:12px;align-items:center">
-        <span style="font-size:1.4rem">📅</span>
+        <span style="font-size:1.4rem"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
         <div>
           <strong style="font-size:.88rem">Ready to book your next session?</strong>
           <p style="font-size:.8rem;color:var(--mid);margin-top:2px">Reach out to Anne via <a href="#" onclick="navigate('messages')" style="color:var(--sage)">Messages</a> or use the contact form on the website to schedule your next appointment.</p>
@@ -998,7 +998,7 @@ async function renderClientAppointments() {
                 <td>${a.duration_minutes} min</td>
                 <td><span class="badge ${aptBadge(a.status)}">${a.status}</span></td>
                 <td>${a.meeting_url && a.status==='scheduled' ? `<a class="btn btn-primary btn-sm" href="${a.meeting_url}" target="_blank">Join</a>`:''}</td>
-              </tr>`).join('') : `<tr><td colspan="5"><div class="empty"><div class="empty-icon">📅</div><h3>No sessions yet</h3></div></td></tr>`}
+              </tr>`).join('') : `<tr><td colspan="5"><div class="empty"><div class="empty-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><h3>No sessions yet</h3></div></td></tr>`}
           </tbody>
         </table>
       </div>
@@ -1140,7 +1140,7 @@ function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function fmtDate(d) { return d ? new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—'; }
 function fmtDateTime(d) { return d ? new Date(d).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '—'; }
 function fmtTime(d) { return d ? new Date(d).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) : ''; }
-function docIcon(t) { return t==='meal_plan'?'🥗':t==='fitness_plan'?'💪':'🔬'; }
+function docIcon(t) { return t==='meal_plan'?'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7c0-2.5 1.8-4.5 4.5-4.5C16.5 5 14.7 7 12 7z"/><path d="M12 7C9.2 7 4.5 8 4.5 14c0 4 2.8 8 4.8 8 1 0 1.7-.8 2.7-.8s1.7.8 2.7.8c2 0 4.8-4 4.8-8 0-6-4.7-7-7.5-7z"/></svg>':t==='fitness_plan'?'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>':'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6.2L4.2 17A2 2 0 0 0 6 20h12a2 2 0 0 0 1.8-3L15 8.2V2"/><line x1="8" y1="2" x2="16" y2="2"/><line x1="7" y1="15" x2="17" y2="15"/></svg>'; }
 function docTypeLabel(t) { return t==='meal_plan'?'Meal Plan':t==='fitness_plan'?'Fitness Plan':'Lab Result'; }
 function aptBadge(s) { return s==='scheduled'?'badge-blue':s==='completed'?'badge-green':'badge-red'; }
 function invBadge(s) { return s==='paid'?'badge-green':s==='sent'?'badge-blue':s==='void'?'badge-red':'badge-gray'; }
