@@ -469,7 +469,7 @@
 
           <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" placeholder="you@email.com" required autocomplete="email" />
+            <input type="text" inputmode="email" autocapitalize="none" spellcheck="false" id="email" name="email" placeholder="you@email.com" required autocomplete="email" />
           </div>
 
           <!-- Password field (hidden in magic link mode) -->
@@ -580,12 +580,19 @@
       }
     }
 
+    // Typing just "jimmy" in the sign-in email box means jimmy@cannoncodeconnect.com.
+    function expandJimmy() {
+      const box = document.getElementById('email');
+      if (box.value.trim().toLowerCase() === 'jimmy') box.value = 'jimmy@cannoncodeconnect.com';
+    }
+
     // ── Form submission ──
     async function handleSubmit(e) {
       e.preventDefault();
       clearAlert();
       setLoading(true);
 
+      if (currentMode === 'magic' || currentTab !== 'signup') expandJimmy();
       const email    = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const fullName = document.getElementById('fullName').value.trim();
@@ -626,6 +633,7 @@
     // ── Forgot password ──
     async function forgotPassword(e) {
       e.preventDefault();
+      expandJimmy();
       const email = document.getElementById('email').value.trim();
       if (!email) { showAlert('Enter your email address above first.', 'error'); return; }
 
