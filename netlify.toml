@@ -1,17 +1,5 @@
 [build]
   publish = "."
 
-[[redirects]]
-  from = "/login"
-  to = "/login.html"
-  status = 200
-
-[[redirects]]
-  from = "/dashboard"
-  to = "/dashboard.html"
-  status = 200
-
-[[redirects]]
-  from = "/reset-password"
-  to = "/reset-password.html"
-  status = 200
+[dev]
+  autoLaunch = false
