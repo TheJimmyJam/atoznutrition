@@ -3,3 +3,11 @@
 
 [dev]
   autoLaunch = false
+
+# The page talks to one other site: the CCC spine's public lead door (clients.cannoncodeconnect.com/api/social-lead/*).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src https://clients.cannoncodeconnect.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

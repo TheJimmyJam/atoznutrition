@@ -4,54 +4,57 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>A to Z Nutrition</title>
-  <meta name="description" content="A to Z Nutrition, Las Vegas. Coming soon.">
+  <meta name="description" content="A to Z Nutrition, Las Vegas.">
   <meta name="theme-color" content="#f7f5f0">
-  <style>
-    :root {
-      --bg: #f7f5f0;
-      --ink: #1f2a24;
-      --muted: #5b6660;
-      --line: #d9d5cc;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root { --bg: #141815; --ink: #eef1ec; --muted: #a7b0aa; --line: #2c332e; }
-    }
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
-    body {
-      min-height: 100vh;
-      min-height: 100dvh;
-      background: var(--bg);
-      color: var(--ink);
-      font: 17px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 24px 16px;
-      overflow-x: hidden;
-    }
-    main { width: 100%; max-width: 32rem; }
-    h1 {
-      margin: 0 0 12px;
-      font-size: clamp(2rem, 8vw, 3rem);
-      line-height: 1.1;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      overflow-wrap: anywhere;
-    }
-    p { margin: 0; color: var(--muted); }
-    .rule { width: 48px; height: 2px; background: var(--line); margin: 20px auto; border: 0; }
-    footer { margin-top: 40px; font-size: 14px; color: var(--muted); }
-  </style>
+  <link rel="stylesheet" href="/site.css">
+  <script src="/app.js" defer></script>
 </head>
 <body>
-  <main>
-    <h1>A to Z Nutrition</h1>
-    <hr class="rule">
-    <p>Coming soon.</p>
+  <main id="profile" class="col">
+    <header class="who">
+      <h1 id="name">A to Z Nutrition</h1>
+      <p id="owner" class="owner" hidden></p>
+      <p id="tagline" class="tagline" hidden></p>
+    </header>
+    <p id="about" class="about" hidden></p>
+    <section id="services" class="services" hidden aria-labelledby="services-title">
+      <h2 id="services-title" data-word="page.services">Services</h2>
+      <ul id="service-list" class="grid"></ul>
+    </section>
+    <button id="work" class="primary" type="button" data-word="page.work">Work with me</button>
+    <p id="load-failed" class="note" role="alert" hidden></p>
   </main>
-  <footer>Las Vegas</footer>
+
+  <main id="flow" class="col" hidden>
+    <div class="bar">
+      <button id="back" class="quiet" type="button" data-word="page.back">Back</button>
+      <span id="step" class="step" aria-live="polite"></span>
+      <button id="close" class="quiet" type="button" data-word="page.close">Close</button>
+    </div>
+    <section id="question" class="panel" hidden>
+      <h2 id="q-title"></h2>
+      <ul id="q-options" class="options"></ul>
+    </section>
+    <form id="contact" class="panel" hidden novalidate>
+      <h2 data-word="page.contact">Where can I reach you?</h2>
+      <label class="field"><span data-word="page.name">Your name</span>
+        <input id="f-name" name="name" type="text" autocomplete="name" maxlength="120" required></label>
+      <label class="field"><span data-word="page.email">Email</span>
+        <input id="f-email" name="email" type="email" autocomplete="email" maxlength="254" required></label>
+      <label class="field"><span data-word="page.phone">Phone (optional)</span>
+        <input id="f-phone" name="phone" type="tel" autocomplete="tel" maxlength="31"></label>
+      <label class="check"><input id="f-tips" name="tips" type="checkbox"> <span data-word="page.tips">Send me tips by email</span></label>
+      <div class="pot" aria-hidden="true"><label>Website <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+      <p id="send-failed" class="note" role="alert" hidden></p>
+      <button id="send" class="primary" type="submit" data-word="page.send">Send</button>
+    </form>
+    <section id="done" class="panel" hidden>
+      <h2 id="done-title"></h2>
+      <a id="done-link" class="primary" hidden></a>
+      <p id="done-later" class="note" hidden></p>
+    </section>
+  </main>
+
+  <footer id="where" class="col foot" hidden></footer>
 </body>
 </html>
