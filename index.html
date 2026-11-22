@@ -5,57 +5,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>A to Z Nutrition</title>
   <meta name="description" content="A to Z Nutrition Virtual Clinic. Labs, nutrition and fitness with Anne Apodaca, functional medicine nutritionist.">
-  <meta name="theme-color" content="#faf6ee">
+  <meta name="theme-color" content="#f4f6f6">
+  <meta name="color-scheme" content="light">
   <link rel="stylesheet" href="/site.css">
   <script src="/app.js" defer></script>
 </head>
-<body>
-  <main id="profile" class="col">
-    <header class="who">
-      <img class="logo" src="/logo.svg" alt="" width="420" height="90">
-      <h1 id="name" class="sr">A to Z Nutrition</h1>
-      <p id="owner" class="owner" hidden></p>
-      <p id="tagline" class="tagline" hidden></p>
+<body class="studio">
+  <div class="pub">
+    <header class="pubtop">
+      <a id="home" class="brandlink" href="/"><img class="brand" src="/logo.svg" alt="A to Z Nutrition" width="420" height="90"></a>
+      <span id="who" class="who" hidden></span>
     </header>
-    <p id="about" class="about" hidden></p>
-    <section id="services" class="services" hidden aria-labelledby="services-title">
-      <h2 id="services-title" data-word="page.services">Services</h2>
-      <ul id="service-list" class="grid"></ul>
-    </section>
-    <button id="work" class="primary" type="button" data-word="page.work">Work with me</button>
-    <p id="load-failed" class="note" role="alert" hidden></p>
-  </main>
 
-  <main id="flow" class="col" hidden>
-    <div class="bar">
-      <button id="back" class="quiet" type="button" data-word="page.back">Back</button>
-      <span id="step" class="step" aria-live="polite"></span>
-      <button id="close" class="quiet" type="button" data-word="page.close">Close</button>
-    </div>
-    <section id="question" class="panel" hidden>
-      <h2 id="q-title"></h2>
-      <ul id="q-options" class="options"></ul>
-    </section>
-    <form id="contact" class="panel" hidden novalidate>
-      <h2 data-word="page.contact">Where can I reach you?</h2>
-      <label class="field"><span data-word="page.name">Your name</span>
-        <input id="f-name" name="name" type="text" autocomplete="name" maxlength="120" required></label>
-      <label class="field"><span data-word="page.email">Email</span>
-        <input id="f-email" name="email" type="email" autocomplete="email" maxlength="254" required></label>
-      <label class="field"><span data-word="page.phone">Phone (optional)</span>
-        <input id="f-phone" name="phone" type="tel" autocomplete="tel" maxlength="31"></label>
-      <label class="check"><input id="f-tips" name="tips" type="checkbox"> <span data-word="page.tips">Send me tips by email</span></label>
-      <div class="pot" aria-hidden="true"><label>Website <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
-      <p id="send-failed" class="note" role="alert" hidden></p>
-      <button id="send" class="primary" type="submit" data-word="page.send">Send</button>
-    </form>
-    <section id="done" class="panel" hidden>
-      <h2 id="done-title"></h2>
-      <a id="done-link" class="primary" hidden></a>
-      <p id="done-later" class="note" hidden></p>
-    </section>
-  </main>
+    <main id="profile">
+      <section class="hero" aria-labelledby="name">
+        <div class="intro">
+          <h1 id="name" class="sr">A to Z Nutrition</h1>
+          <p id="owner" class="eyeline" hidden></p>
+          <p id="tagline" class="display" hidden></p>
+          <p id="about" class="about" hidden></p>
+          <button id="work" class="btn" type="button"><span data-word="page.work">Work with me</span><svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></button>
+          <p id="load-failed" class="note" role="alert" hidden></p>
+        </div>
+        <figure id="studio" class="plate-wrap">
+          <img id="portrait" class="portrait" alt="" hidden>
+          <div id="plate" class="plate" aria-hidden="true"><span class="plate-rule"></span><span id="plate-name" class="plate-name">A to Z Nutrition</span><span id="plate-where" class="plate-where" hidden></span></div>
+        </figure>
+      </section>
+      <section id="services" class="services" hidden aria-labelledby="services-title">
+        <h2 id="services-title" data-word="page.services">Services</h2>
+        <ul id="service-list" class="cards"></ul>
+      </section>
+    </main>
 
-  <footer id="where" class="col foot" hidden></footer>
+    <main id="flow" class="flow" hidden>
+      <div id="bar" class="between">
+        <button id="back" class="bread" type="button"><svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M14 8H3M7 4L3 8l4 4"/></svg><span data-word="page.back">Back</span></button>
+        <span id="step" class="k"></span>
+      </div>
+
+      <form id="question" class="panel" hidden novalidate>
+        <div id="progress" class="progress" aria-hidden="true"></div>
+        <fieldset>
+          <legend><span id="q-title" class="qtitle" tabindex="-1"></span></legend>
+          <div id="q-options" class="options"></div>
+        </fieldset>
+        <button id="next" class="btn wide" type="submit" disabled><span data-word="page.next">Next</span><svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></button>
+      </form>
+
+      <form id="contact" class="panel" hidden novalidate>
+        <p class="k" data-word="page.last">Last step</p>
+        <h1 id="c-title" class="qtitle" tabindex="-1" data-word="page.contact">Where can I reach you?</h1>
+        <label class="field"><span data-word="page.name">Your name</span>
+          <input id="f-name" name="name" type="text" autocomplete="name" maxlength="120" required></label>
+        <label class="field"><span data-word="page.email">Email</span>
+          <input id="f-email" name="email" type="email" autocomplete="email" maxlength="254" required></label>
+        <label class="field"><span data-word="page.phone">Phone (optional)</span>
+          <input id="f-phone" name="phone" type="tel" autocomplete="tel" maxlength="31"></label>
+        <label class="check"><input id="f-tips" name="tips" type="checkbox"> <span data-word="page.tips">Send me tips by email</span></label>
+        <div class="pot" aria-hidden="true"><label>Website <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+        <p id="send-failed" class="note bad" role="alert" hidden></p>
+        <button id="send" class="btn wide" type="submit"><span data-word="page.send">Send</span><svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></button>
+      </form>
+
+      <section id="done" class="panel" hidden aria-labelledby="done-title">
+        <p class="k" data-word="page.nextstep">Your next step</p>
+        <h1 id="done-title" class="qtitle" tabindex="-1"></h1>
+        <a id="done-link" class="btn wide" hidden></a>
+        <p id="done-later" class="note" hidden></p>
+      </section>
+    </main>
+
+    <footer class="pubfoot"><span id="foot-name">A to Z Nutrition</span><span id="where" hidden></span></footer>
+  </div>
 </body>
 </html>
