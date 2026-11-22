@@ -75,18 +75,21 @@
     show(tag, !!t)
     setText('about', p.about)
     // The studio panel: her own portrait only if her settings give one; otherwise a navy panel with her name.
-    var pic = typeof p.portrait === 'string' && /^(https:\/\/|\/(?!\/))/.test(p.portrait) ? p.portrait : ''
+    // Same-origin paths only (the CSP allows img-src 'self'): one leading slash, no scheme, no "//", no backslash.
+    var pic = typeof p.portrait === 'string' && /^\/(?![\/\\])[^\\\s]*$/.test(p.portrait) ? p.portrait : ''
     var img = $('portrait')
-    if (pic) { img.src = pic; img.alt = owner.split(',')[0].trim() }
+    img.onerror = function () { show(img, false); show($('plate'), true) }
+    if (pic) { img.alt = owner.split(',')[0].trim(); img.src = pic } else img.removeAttribute('src')
     show(img, !!pic)
     show($('plate'), !pic)
     var list = $('service-list')
     list.textContent = ''
-    var services = Array.isArray(p.services) ? p.services : []
+    // Only non-empty strings become cards; anything else in her settings is skipped.
+    var services = (Array.isArray(p.services) ? p.services : []).filter(function (x) { return typeof x === 'string' && x.trim() })
     for (var i = 0; i < services.length; i++) {
       var li = document.createElement('li')
       // "Name: what it is" shows as a name over a line of detail; a plain string shows as a name.
-      var s = String(services[i])
+      var s = services[i].trim()
       var cut = s.indexOf(': ')
       var b = document.createElement('strong')
       b.textContent = cut > 0 ? s.slice(0, cut) : s
@@ -162,7 +165,8 @@
 
   function route(moved) {
     var want = viewOf(location.hash)
-    var v = allowed(want)
+    // A finished flow (a lead was sent) has no way back into its questions or contact step: Back lands on the page.
+    var v = state.result && want !== 'done' ? 'page' : allowed(want)
     if (v !== want) history.replaceState({ sd: v }, '', url(v))
     view = v
     var inFlow = v !== 'page'
@@ -227,13 +231,23 @@
     go(i + 1 < questions.length ? 'q' + (i + 2) : 'contact')
   }
 
+  function busy(on) {
+    var b = $('work')
+    if (on) { b.setAttribute('aria-busy', 'true'); b.setAttribute('aria-disabled', 'true') }
+    else { b.removeAttribute('aria-busy'); b.removeAttribute('aria-disabled') }
+  }
   function open() {
     var start = function () {
       if (state.result) { state = { answers: {}, result: null }; keep(); $('contact').reset() }
       go('q1')
     }
     if (questions.length) return start()
-    load().then(start, function () { setText('load-failed', word('page.failed', "Couldn't load. Please try again.")) })
+    if ($('work').getAttribute('aria-busy') === 'true') return
+    busy(true)
+    load().then(function () { busy(false); start() }, function () {
+      busy(false)
+      setText('load-failed', word('page.failed', "Couldn't load. Please try again."))
+    })
   }
 
   function renderDone() {
@@ -259,7 +273,7 @@
 
   function send(e) {
     e.preventDefault()
-    if (sending) return
+    if (sending || state.result) return // one lead per finished flow; "Work with me" starts a new one
     var body = {
       slug: SLUG,
       name: $('f-name').value.trim(),
@@ -278,9 +292,13 @@
     setText('send-failed', '')
     post('/api/social-lead/submit', body).then(function (r) {
       if (r.status === 201 && r.data && r.data.ok) {
-        state.result = { fit: r.data.fit === true, next: r.data.next || {} }
+        // Finished: keep only the result, clear the answers and the contact fields, and let the result take the
+        // contact step's place in history so Back and Forward never come back to a filled-in Send.
+        state = { answers: {}, result: { fit: r.data.fit === true, next: r.data.next || {} } }
         keep()
-        return go('done')
+        $('contact').reset()
+        history.replaceState({ sd: 'done' }, '', url('done'))
+        return route(true)
       }
       var key = r.status === 429 ? 'page.rate' : r.status === 400 ? 'page.invalid' : 'page.failed'
       setText('send-failed', word(key, "Couldn't send. Please try again."))
@@ -296,6 +314,8 @@
     $('question').addEventListener('submit', answer)
     $('contact').addEventListener('submit', send)
     window.addEventListener('popstate', function () { route(true) })
+    // Back/forward-cache restore: pick up what this tab kept (a lead sent here stays sent) and show the right step.
+    window.addEventListener('pageshow', function (e) { if (e.persisted) { recall(); if (questions.length) route(false) } })
     var deep = viewOf(location.hash) !== 'page'
     load().then(function () { if (deep) route(true) }, function () {
       if (deep) { history.replaceState(null, '', url('page')); route(false) }

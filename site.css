@@ -59,6 +59,7 @@ button { cursor: pointer; }
 }
 .btn:hover { background: var(--side); }
 .btn:disabled { opacity: 0.5; cursor: default; background: var(--accent); }
+.btn[aria-busy="true"] { opacity: 0.5; cursor: progress; background: var(--accent); }
 .btn.wide { display: flex; width: 100%; }
 .arrow { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .bread {
