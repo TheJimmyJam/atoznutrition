@@ -262,6 +262,14 @@
       link.textContent = booking ? word('page.fit.button', 'Book a time') : word('page.guide.button', 'Get the free guide')
       link.appendChild($('work').querySelector('.arrow').cloneNode(true))
       link.setAttribute('data-next', booking ? 'booking' : 'guide')
+      // Stage 6A: the tap is counted (the Monday report's booking clicks) by a beacon to the spine; text/plain, so no
+      // preflight. Never waited on and never in the link's way: it opens whatever the beacon does.
+      link.onclick = function () {
+        try {
+          var kind = link.getAttribute('data-next')
+          if (kind && navigator.sendBeacon) navigator.sendBeacon(API + '/api/social-lead/click', JSON.stringify({ slug: SLUG, link: kind }))
+        } catch (e) { /* the link still opens */ }
+      }
       show(link, true)
       show($('done-later'), false)
     } else {
