@@ -64,6 +64,7 @@ const GUIDE = 'https://guide.example.test/start'
 const stub = { pageDelay: 0, pageFail: false }
 let submits = 0            // every submit request the page made
 const posted = []          // the leads the stub accepted
+const clicks = []          // the booking-link beacons the stub received (stage 6A)
 let bfNotUsed = ''          // why Chrome did not use the back/forward cache, if it said
 let docCsp = null           // the CSP header on the last page load, as Chrome received it
 const external = []        // requests to any host other than the page's and the stubbed spine (each fails the run)
@@ -81,6 +82,7 @@ async function spine(method, pathname, body) {
     const fit = body.timeline === 'now' && body.budget === 'high'
     return [201, { ok: true, fit, next: fit ? { kind: 'booking', url: BOOK } : { kind: 'guide', url: GUIDE } }]
   }
+  if (pathname === '/api/social-lead/click') { clicks.push(body); return [200, { ok: true }] }
   return [404, { ok: false }]
 }
 async function paused({ requestId, request }) {
@@ -292,6 +294,13 @@ async function main() {
     check(body.website === '' && body.tips === true && body.phone === null && body.slug === 'atoz' && body.goal === 'both', 'submit values: honeypot empty, opt-in, answers', JSON.stringify(body))
     layoutChecks(await js(LAYOUT), 'phone result')
     await shot('390-result')
+    // Stage 6A: a tap on the booking link sends one beacon (text/plain JSON, slug + link) and leaves the link to open.
+    const tap = await js(`let opened = false; const a = document.getElementById('done-link')
+      document.addEventListener('click', (e) => { if (e.target.closest('#done-link')) { opened = !e.defaultPrevented; e.preventDefault() } }, { once: true })
+      a.click(); return { opened, href: a.href }`)
+    for (let i = 0; i < 40 && !clicks.length; i++) await sleep(100)
+    check(tap.opened && tap.href === BOOK, 'the booking link still opens (the beacon never blocks it)', JSON.stringify(tap))
+    check(clicks.length === 1 && clicks[0].slug === 'atoz' && clicks[0].link === 'booking', 'a booking tap sends one click beacon', JSON.stringify(clicks))
 
     // 4b. One lead per finished flow: Back, Forward, a second Send, a refresh and a back/forward-cache restore never post again.
     const leads = submits
