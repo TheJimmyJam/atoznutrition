@@ -49,7 +49,16 @@
     var services = Array.isArray(p.services) ? p.services : []
     for (var i = 0; i < services.length; i++) {
       var li = document.createElement('li')
-      li.textContent = services[i]
+      // "Name: what it is" shows as a name over a line of detail; a plain string shows as before.
+      var cut = services[i].indexOf(': ')
+      if (cut > 0) {
+        var b = document.createElement('strong')
+        b.textContent = services[i].slice(0, cut)
+        var d = document.createElement('span')
+        d.textContent = services[i].slice(cut + 2)
+        li.appendChild(b)
+        li.appendChild(d)
+      } else li.textContent = services[i]
       list.appendChild(li)
     }
     // Equal columns on a wide screen: two for an even count, three otherwise; one column on a phone.

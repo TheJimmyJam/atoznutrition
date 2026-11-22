@@ -29,7 +29,7 @@
 
   <!-- ── "Nutri" ── -->
   <text x="130" y="60" font-family="Georgia,Times New Roman,serif" font-size="44"
-        fill="url(#goldV)">Nutri</text>
+        textLength="140" lengthAdjust="spacingAndGlyphs" fill="url(#goldV)">Nutri</text>
 
   <!-- ── Plant icon (sits where the "i" dot would be, ~x=262, y=14) ── -->
   <!-- fruit body -->
