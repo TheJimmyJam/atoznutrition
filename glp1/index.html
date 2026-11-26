@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Start here | A to Z Nutrition</title>
+  <meta name="description" content="Protein, strength and small meals while on GLP-1 medication, from A to Z Nutrition.">
+  <meta name="theme-color" content="#f4f6f6">
+  <meta name="color-scheme" content="light">
+  <link rel="stylesheet" href="/site.css">
+  <link rel="stylesheet" href="/glp1/glp1.css">
+  <script src="/glp1/config.js" defer></script>
+  <script src="/glp1/glp1.js" defer></script>
+</head>
+<body class="studio">
+  <div class="pub">
+    <header class="pubtop">
+      <a class="brandlink" href="/"><img class="brand" src="/logo.svg" alt="A to Z Nutrition" width="420" height="90"></a>
+    </header>
+
+    <main id="glp1" class="g1">
+      <section class="g1-head" aria-labelledby="g1-title">
+        <p class="eyeline">GLP-1 protocol</p>
+        <h1 id="g1-title" class="g1-title">Start here</h1>
+        <p id="fixed-line" class="g1-fixed">Education, not medical advice. Anne is a nutritionist, not a prescriber. Talk to your prescriber about your medication and before changing how you eat, train or take supplements.</p>
+      </section>
+
+      <section class="g1-sec" aria-labelledby="pick-title">
+        <h2 id="pick-title" class="g1-h2">Which week sounds like yours?</h2>
+        <div id="tracks" class="g1-tracks" role="radiogroup" aria-labelledby="pick-title"></div>
+        <p id="day" class="g1-day" aria-live="polite" hidden><span id="day-k" class="k"></span><span id="day-text"></span></p>
+      </section>
+
+      <section class="g1-sec" aria-labelledby="free-title">
+        <h2 id="free-title" class="g1-h2">Free lessons</h2>
+        <ul id="lessons" class="g1-lessons"></ul>
+      </section>
+
+      <section class="g1-sec" aria-labelledby="calc-title">
+        <h2 id="calc-title" class="g1-h2">Protein for your day</h2>
+        <div class="g1-calc">
+          <div class="g1-row">
+            <label class="field g1-weight"><span>Your weight</span>
+              <input id="weight" type="text" inputmode="decimal" autocomplete="off" maxlength="6" spellcheck="false"></label>
+            <div class="g1-units" role="group" aria-label="Unit">
+              <button id="unit-lb" class="g1-unit" type="button" aria-pressed="true">lb</button>
+              <button id="unit-kg" class="g1-unit" type="button" aria-pressed="false">kg</button>
+            </div>
+          </div>
+          <p id="result" class="g1-result" aria-live="polite" hidden><strong id="per-day"></strong><span id="per-meal"></span></p>
+          <p id="caution" class="note">Ask your prescriber first if you have kidney disease, are pregnant or breastfeeding.</p>
+        </div>
+      </section>
+
+      <section class="g1-sec g1-next" aria-label="Next step">
+        <a id="book" class="btn" href="/#q1" data-kind="glp1-book">Book a session</a>
+        <a id="protocol" class="btn" href="/#q1" data-kind="glp1-protocol">Get the full protocol</a>
+      </section>
+    </main>
+
+    <footer class="pubfoot"><span>A to Z Nutrition</span></footer>
+  </div>
+</body>
+</html>

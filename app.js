@@ -317,6 +317,8 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     recall()
+    // The GLP-1 page stays unlinked until its config says otherwise (glp1/config.js homeLink).
+    if (window.GLP1_CONFIG && window.GLP1_CONFIG.homeLink === true) show($('glp1-link'), true)
     $('work').addEventListener('click', open)
     $('back').addEventListener('click', back)
     $('question').addEventListener('submit', answer)
